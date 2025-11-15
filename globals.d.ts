@@ -2,12 +2,6 @@ import {ISillyTavernContext} from "./types/SillytavernContext.ts";
 
 export {};
 
-// 1. Import when extension is user-scoped
-import './sillytavern' ;
-
-// 2. Import when extension is server-scoped
-// import '../../../../global';
-
 interface SillyTavernGlobal {
     getContext(): ISillyTavernContext;
     [key: string]: any; // Allow for other properties
