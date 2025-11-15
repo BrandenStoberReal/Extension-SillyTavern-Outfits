@@ -1118,35 +1118,84 @@ declare enum POPUP_RESULT {
 }
 
 interface SlashCommandParser {
+    // Static properties
     commands: Record<string, SlashCommand>;
     helpStrings: Record<string, string>;
     verifyCommandNames: boolean;
+
+    // Instance properties
     text: string;
     index: number;
-    abortController: any;
-    debugController: any;
-    scope: any;
-    closure: any;
+    abortController: SlashCommandAbortController;
+    debugController: SlashCommandDebugController;
+    scope: SlashCommandScope;
+    closure: SlashCommandClosure;
     flags: Record<string, boolean>;
     jumpedEscapeSequence: boolean;
-    closureIndex: any[];
-    macroIndex: any[];
-    commandIndex: any[];
-    scopeIndex: any[];
+    closureIndex: { start: number; end: number }[];
+    macroIndex: { start: number; end: number; name: string }[];
+    commandIndex: SlashCommandExecutor[];
+    scopeIndex: SlashCommandScope[];
     parserContext: string;
+
+    // Getters
     readonly userIndex: number;
     readonly ahead: string;
     readonly behind: string;
     readonly char: string;
     readonly endOfText: boolean;
 
-    parse(text: string, verifyCommandNames?: boolean, flags?: any, abortController?: any, debugController?: any): any;
-    // ... other methods
+    // Methods
+    parse(text: string, verifyCommandNames?: boolean, flags?: Record<string, boolean>, abortController?: SlashCommandAbortController, debugController?: SlashCommandDebugController): SlashCommandClosure;
+    getNameAt(text: string, index: number): Promise<AutoCompleteNameResult | null>;
+    take(length?: number): string;
+    discardWhitespace(): void;
+    testSymbol(sequence: string | RegExp, offset?: number): boolean;
+    testSymbolLooseyGoosey(sequence: string | RegExp, offset?: number): boolean;
+    replaceGetvar(value: string): string;
+    testClosure(): boolean;
+    testClosureEnd(): boolean;
+    parseClosure(isRoot?: boolean): SlashCommandClosure;
+    testBreakPoint(): boolean;
+    parseBreakPoint(): SlashCommandBreakPoint;
+    testBreak(): boolean;
+    parseBreak(): SlashCommandBreak;
+    testBlockComment(): boolean;
+    testBlockCommentEnd(): boolean;
+    parseBlockComment(): void;
+    testComment(): boolean;
+    testCommentEnd(): boolean;
+    parseComment(): void;
+    testParserFlag(): boolean;
+    testParserFlagEnd(): boolean;
+    parseParserFlag(): void;
+    testRunShorthand(): boolean;
+    testRunShorthandEnd(): boolean;
+    parseRunShorthand(): SlashCommandExecutor;
+    testCommand(): boolean;
+    testCommandEnd(): boolean;
+    parseCommand(): SlashCommandExecutor;
+    testNamedArgument(): boolean;
+    parseNamedArgument(): SlashCommandNamedArgumentAssignment;
+    testUnnamedArgument(): boolean;
+    testUnnamedArgumentEnd(): boolean;
+    parseUnnamedArgument(split?: boolean, splitCount?: number | null, rawQuotes?: boolean): SlashCommandUnnamedArgumentAssignment[];
+    testQuotedValue(): boolean;
+    testQuotedValueEnd(): boolean;
+    parseQuotedValue(): string;
+    testListValue(): boolean;
+    testListValueEnd(): boolean;
+    parseListValue(): string;
+    testValue(): boolean;
+    testValueEnd(): boolean;
+    parseValue(): string;
+    indexMacros(offset: number, text: string): void;
+    getHelpString(): string;
 }
 
 interface SlashCommand {
     name: string;
-    callback: (namedArguments: any, unnamedArguments: any) => any;
+    callback: (namedArguments: Record<string, any>, unnamedArguments: (string | SlashCommandClosure)[]) => string | SlashCommandClosure | Promise<string | SlashCommandClosure>;
     helpString: string;
     splitUnnamedArgument: boolean;
     splitUnnamedArgumentCount: number;
@@ -1163,6 +1212,73 @@ interface SlashCommand {
 
     renderHelpItem(key?: string): HTMLElement;
     renderHelpDetails(key?: string): DocumentFragment;
+}
+
+interface SlashCommandAbortController {
+    // Properties and methods based on usage in context
+    signal: AbortSignal;
+    abort(reason?: any): void;
+}
+
+interface SlashCommandDebugController {
+    // Properties and methods based on usage in context
+    stack: any[];
+    cmdStack: any[];
+    // Additional properties based on how it's used
+}
+
+interface SlashCommandScope {
+    // Properties based on usage in context
+    allVariableNames?: string[];
+    [key: string]: any; // Allow for dynamic properties
+}
+
+interface SlashCommandClosure {
+    // Properties based on usage in context
+    execute(): Promise<any>;
+    abortController: SlashCommandAbortController;
+    isAborted?: boolean;
+    isQuietlyAborted?: boolean;
+    abortReason?: string;
+}
+
+interface SlashCommandExecutor {
+    // Properties based on usage in context
+    start: number;
+    end?: number;
+    name: string;
+    command?: SlashCommand;
+    unnamedArgumentList?: any[];
+    namedArgumentList?: any[];
+}
+
+interface SlashCommandBreakPoint {
+    // Properties based on usage in context
+}
+
+interface SlashCommandBreak {
+    // Properties based on usage in context
+}
+
+interface SlashCommandNamedArgumentAssignment {
+    // Properties based on usage in context
+    name: string;
+    value: any;
+}
+
+interface SlashCommandUnnamedArgumentAssignment {
+    // Properties based on usage in context
+    value: any;
+}
+
+interface AutoCompleteNameResult {
+    // Properties based on usage in context
+    name: string;
+    start: number;
+    options: any[];
+    fuzzy: boolean;
+    noMatchMessage: () => string;
+    emptyMessage: () => string;
 }
 
 interface SlashCommandArgument {
@@ -1201,6 +1317,25 @@ declare enum ARGUMENT_TYPE {
 }
 
 type NamesBehavior = number | "force" | "strip" | "system";
+
+// API Connect Map Types
+interface ApiConfig {
+    selected: string;
+    button?: string;
+    type?: string;
+    source?: string;
+}
+
+type ApiConnectMap = {
+    [key: string]: ApiConfig;
+};
+
+// Tag Types
+interface Tag {
+    id: string;
+    name: string;
+    color: string;
+}
 
 interface AccountStorage {
     getItem(key: string): string | null;
@@ -1337,7 +1472,7 @@ export interface ISillyTavernContext {
     translate(text: string, key?: string): string;
     getCurrentLocale(): string;
     addLocaleData(localeId: string, data: any): void;
-    tags: any[];
+    tags: Tag[];
     tagMap: Record<string, any>;
     menuType: string;
     createCharacterData: any;
@@ -1374,7 +1509,7 @@ export interface ISillyTavernContext {
     updateWorldInfoList(): Promise<void>;
     convertCharacterBook(characterBook: any): Promise<any>;
     getWorldInfoPrompt(chat: string[], maxContext: number, isDryRun: boolean, globalScanData: any): Promise<any>;
-    CONNECT_API_MAP: any;
+    CONNECT_API_MAP: ApiConnectMap;
     getTextGenServer(type?: string): string;
     extractMessageFromData(data: any, activeApi?: string): string;
     getPresetManager(apiId?: string): any;
