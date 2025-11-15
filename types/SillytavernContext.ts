@@ -262,6 +262,13 @@ export interface IArgumentTypes {
     DICTIONARY: string;
 }
 
+export interface MacroAutoCompleteOption {
+    new (name: string, title: string, description: string): MacroAutoCompleteOption;
+    name: string;
+    title: string;
+    description: string;
+}
+
 export interface IConnectApiMap {
     [key: string]: {
         selected: string;
@@ -289,6 +296,512 @@ export interface IVariables {
 
 export interface ISymbols {
     ignore: string;
+}
+
+// Chat Completion Service related types
+export interface TextCompletionRequestBase {
+    stream?: boolean;
+    max_tokens?: number;
+    model?: string;
+    api_type?: string;
+    api_server?: string;
+    temperature?: number;
+    min_p?: number;
+    [key: string]: any; // Allow additional properties
+}
+
+export interface TextCompletionPayload extends TextCompletionRequestBase {
+    prompt: string;
+    max_new_tokens?: number;
+}
+
+export interface TextCompletionOptions {
+    presetName?: string;
+    instructName?: string;
+    instructSettings?: Partial<InstructSettings>;
+}
+
+export interface TextCompletionService {
+    TYPE: string;
+    createRequestData: (params: TextCompletionRequestBase & { prompt: string }) => TextCompletionPayload;
+    sendRequest: (
+        data: TextCompletionPayload,
+        extractData?: boolean,
+        signal?: AbortSignal
+    ) => Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+    processRequest: (
+        custom: TextCompletionRequestBase & { prompt: any },
+        options?: TextCompletionOptions,
+        extractData?: boolean,
+        signal?: AbortSignal
+    ) => Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+    presetToGeneratePayload: (
+        preset: Record<string, any>,
+        customPreset?: Record<string, any>
+    ) => Record<string, any>;
+}
+
+export interface ChatCompletionMessage {
+    role: string;
+    content: string;
+    name?: string;
+    ignoreInstruct?: boolean;
+}
+
+export interface ChatCompletionPayload {
+    stream?: boolean;
+    messages: ChatCompletionMessage[];
+    model: string;
+    chat_completion_source: string;
+    max_tokens?: number;
+    temperature?: number;
+    custom_url?: string;
+    reverse_proxy?: string;
+    proxy_password?: string;
+    custom_prompt_post_processing?: string;
+    use_makersuite_sysprompt?: boolean;
+    claude_use_sysprompt?: boolean;
+    [key: string]: any; // Allow additional properties
+}
+
+export interface ChatCompletionOptions {
+    presetName?: string;
+}
+
+export interface StreamResponse {
+    text: string;
+    swipes: string[];
+    state: {
+        reasoning: string;
+        image: string;
+    };
+}
+
+export interface ExtractedData {
+    content: string;
+    reasoning: string;
+}
+
+export interface ChatCompletionService {
+    TYPE: string;
+    createRequestData: (params: ChatCompletionPayload) => ChatCompletionPayload;
+    sendRequest: (
+        data: ChatCompletionPayload,
+        extractData?: boolean,
+        signal?: AbortSignal
+    ) => Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+    processRequest: (
+        custom: ChatCompletionPayload,
+        options: ChatCompletionOptions,
+        extractData?: boolean,
+        signal?: AbortSignal
+    ) => Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+    presetToGeneratePayload: (
+        preset: Record<string, any>,
+        customParams?: Record<string, any>
+    ) => Record<string, any>;
+}
+
+export interface InstructSettings {
+    [key: string]: any; // Define the structure for instruct settings
+}
+
+export interface ConnectionProfile {
+    id: string;
+    mode: string;
+    exclude: string[];
+    api: string;
+    preset: string;
+    sysprompt: string;
+    'sysprompt-state': string;
+    context: string;
+    'instruct-state': string;
+    tokenizer: string;
+    'stop-strings': string;
+    'start-reply-with': string;
+    'reasoning-template': string;
+    name: string;
+    model?: string;
+    'api-url'?: string;
+    proxy?: string;
+    'prompt-post-processing'?: string;
+    instruct?: string;
+}
+
+export interface ConnectionManagerRequestParams {
+    stream?: boolean;
+    signal?: AbortSignal | null;
+    extractData?: boolean;
+    includePreset?: boolean;
+    includeInstruct?: boolean;
+    instructSettings?: Partial<InstructSettings>;
+}
+
+export interface ConnectionManagerRequestService {
+    defaultSendRequestParams: ConnectionManagerRequestParams;
+    getAllowedTypes: () => Record<string, string>;
+    sendRequest: (
+        profileId: string,
+        prompt: string | any[],
+        maxTokens: number,
+        custom?: ConnectionManagerRequestParams,
+        overridePayload?: Record<string, any>
+    ) => Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+    getSupportedProfiles: () => ConnectionProfile[];
+    isProfileSupported: (profile?: ConnectionProfile) => boolean;
+    validateProfile: (profile?: ConnectionProfile) => any; // Return type is ConnectAPIMap
+    handleDropdown: (
+        selector: string,
+        initialSelectedProfileId: string,
+        onChange?: (profile?: ConnectionProfile) => Promise<void> | void,
+        onCreate?: (profile: ConnectionProfile) => Promise<void> | void,
+        unUpdate?: (oldProfile: ConnectionProfile, newProfile: ConnectionProfile) => Promise<void> | void,
+        onDelete?: (profile: ConnectionProfile) => Promise<void> | void
+    ) => void;
+}
+
+// Popup related types
+export interface CustomPopupButton {
+    text: string;
+    result: number;
+    classes?: string[];
+    appendAtEnd?: boolean;
+    action?: (event: Event) => void;
+}
+
+export interface CustomPopupInput {
+    id: string;
+    type?: 'checkbox' | 'text';
+    label: string;
+    defaultState?: any;
+    tooltip?: string;
+}
+
+// Slash Command related types
+export interface SlashCommandEnumValue {
+    value: string;
+    description?: string;
+}
+
+export interface SlashCommandExecutor {
+    // Define properties and methods for executor
+    [key: string]: any;
+}
+
+export interface SlashCommandScope {
+    // Define properties and methods for scope
+    [key: string]: any;
+}
+
+export interface SlashCommandArgumentInstance {
+    description: string;
+    typeList: (string | number)[]; // ARGUMENT_TYPE values
+    isRequired: boolean;
+    acceptsMultiple: boolean;
+    defaultValue: string | any;
+    enumList: SlashCommandEnumValue[];
+    enumProvider: ((executor: SlashCommandExecutor, scope: SlashCommandScope) => SlashCommandEnumValue[]) | null;
+    forceEnum: boolean;
+}
+
+export interface SlashCommandArgument {
+    new (
+        description: string,
+        types: (string | number) | (string | number)[],
+        isRequired?: boolean,
+        acceptsMultiple?: boolean,
+        defaultValue?: string | any,
+        enums?: (string | SlashCommandEnumValue)[],
+        enumProvider?: ((executor: SlashCommandExecutor, scope: SlashCommandScope) => SlashCommandEnumValue[]) | null,
+        forceEnum?: boolean
+    ): SlashCommandArgumentInstance;
+    readonly prototype: SlashCommandArgumentInstance;
+    fromProps(props: any): SlashCommandArgumentInstance;
+}
+
+export interface SlashCommandNamedArgumentInstance extends SlashCommandArgumentInstance {
+    name: string;
+    aliasList: string[];
+}
+
+export interface SlashCommandNamedArgument {
+    new (
+        name: string,
+        description: string,
+        types: (string | number) | (string | number)[],
+        isRequired?: boolean,
+        acceptsMultiple?: boolean,
+        defaultValue?: string | any,
+        enums?: (string | SlashCommandEnumValue)[],
+        aliases?: string[],
+        enumProvider?: ((executor: SlashCommandExecutor, scope: SlashCommandScope) => SlashCommandEnumValue[]) | null,
+        forceEnum?: boolean
+    ): SlashCommandNamedArgumentInstance;
+    readonly prototype: SlashCommandNamedArgumentInstance;
+    fromProps(props: any): SlashCommandNamedArgumentInstance;
+}
+
+export interface CommonEnumProviders {
+    boolean: () => () => SlashCommandEnumValue[];
+}
+
+// Parser-related types
+export interface PARSER_FLAG {
+    REPLACE_GETVAR: string;
+    STRICT_ESCAPING: string;
+}
+
+export interface SlashCommandClosure {
+    [key: string]: any; // Define more specific properties as needed
+}
+
+export interface SlashCommandBreakPoint extends SlashCommandExecutor {
+    [key: string]: any;
+}
+
+export interface SlashCommandBreak extends SlashCommandExecutor {
+    [key: string]: any;
+}
+
+export interface SlashCommandNamedArgumentAssignment {
+    start: number;
+    end: number;
+    name: string;
+    value: any;
+}
+
+export interface SlashCommandUnnamedArgumentAssignment {
+    start: number;
+    end: number;
+    value: any;
+}
+
+export interface SlashCommandParserError extends Error {
+    new (message: string, text: string, index: number): SlashCommandParserError;
+    message: string;
+    text: string;
+    index: number;
+}
+
+export interface AutoCompleteNameResult {
+    name: string;
+    index: number;
+    options: any[];
+    isFuzzy: boolean;
+    noMatchMessage: () => string;
+    emptyMessage: () => string;
+}
+
+export interface SlashCommandAutoCompleteNameResult extends AutoCompleteNameResult {
+    new (executor: any, scope: any, commands: Record<string, SlashCommand>): SlashCommandAutoCompleteNameResult;
+}
+
+export interface SlashCommandVariableAutoCompleteOption {
+    new (name: string): SlashCommandVariableAutoCompleteOption;
+    name: string;
+}
+
+export interface SlashCommandQuickReplyAutoCompleteOption {
+    new (name: string): SlashCommandQuickReplyAutoCompleteOption;
+    name: string;
+}
+
+export interface SlashCommandParser {
+    commands: Record<string, SlashCommand>;
+    addCommand: (command: string, callback: any, aliases: string[], helpString?: string) => void;
+    addCommandObject: (command: SlashCommand) => void;
+    addCommandObjectUnsafe: (command: SlashCommand) => void;
+    new (): SlashCommandParser;
+    readonly prototype: SlashCommandParserInstance;
+}
+
+export interface SlashCommandParserInstance {
+    readonly commands: Record<string, SlashCommand>;
+    helpStrings: Record<string, string>;
+    verifyCommandNames: boolean;
+    text: string;
+    index: number;
+    abortController: any; // SlashCommandAbortController
+    debugController: any; // SlashCommandDebugController
+    scope: SlashCommandScope;
+    closure: any; // SlashCommandClosure
+    flags: Record<string, boolean>; // PARSER_FLAG
+    jumpedEscapeSequence: boolean;
+    closureIndex: { start: number; end: number }[];
+    macroIndex: { start: number; end: number; name: string }[];
+    commandIndex: any[]; // SlashCommandExecutor[]
+    scopeIndex: SlashCommandScope[];
+    parserContext: string;
+    readonly userIndex: number;
+    readonly ahead: string;
+    readonly behind: string;
+    readonly char: string;
+    readonly endOfText: boolean;
+
+    getHelpString: () => string;
+    getNameAt: (text: string, index: number) => Promise<any>;
+    take: (length?: number) => string;
+    discardWhitespace: () => void;
+    testSymbol: (sequence: string | RegExp, offset?: number) => boolean;
+    testSymbolLooseyGoosey: (sequence: string | RegExp, offset?: number) => boolean;
+    replaceGetvar: (value: string) => string;
+    parse: (
+        text: string,
+        verifyCommandNames?: boolean,
+        flags?: Record<string, boolean>,
+        abortController?: any,
+        debugController?: any
+    ) => any; // Returns SlashCommandClosure
+    testClosure: () => boolean;
+    testClosureEnd: () => boolean;
+    parseClosure: (isRoot?: boolean) => any; // Returns SlashCommandClosure
+    testBreakPoint: () => boolean;
+    parseBreakPoint: () => any; // Returns SlashCommandBreakPoint
+    testBreak: () => boolean;
+    parseBreak: () => any; // Returns SlashCommandBreak
+    testBlockComment: () => boolean;
+    testBlockCommentEnd: () => boolean;
+    parseBlockComment: () => void;
+    testComment: () => boolean;
+    testCommentEnd: () => boolean;
+    parseComment: () => void;
+    testParserFlag: () => boolean;
+    testParserFlagEnd: () => boolean;
+    parseParserFlag: () => void;
+    testRunShorthand: () => boolean;
+    testRunShorthandEnd: () => boolean;
+    parseRunShorthand: () => any; // Returns SlashCommandExecutor
+    testCommand: () => boolean;
+    testCommandEnd: () => boolean;
+    parseCommand: () => any; // Returns SlashCommandExecutor
+    testNamedArgument: () => boolean;
+    parseNamedArgument: () => any; // Returns SlashCommandNamedArgumentAssignment
+    testUnnamedArgument: () => boolean;
+    testUnnamedArgumentEnd: () => boolean;
+    parseUnnamedArgument: (
+        split?: boolean,
+        splitCount?: number | null,
+        rawQuotes?: boolean
+    ) => any[]; // Returns SlashCommandUnnamedArgumentAssignment[]
+    testQuotedValue: () => boolean;
+    testQuotedValueEnd: () => boolean;
+    parseQuotedValue: () => string;
+    testListValue: () => boolean;
+    testListValueEnd: () => boolean;
+    parseListValue: () => string;
+    testValue: () => boolean;
+    testValueEnd: () => boolean;
+    parseValue: () => string;
+    indexMacros: (offset: number, text: string) => void;
+    registerLanguage: () => void;
+}
+
+export interface NamedArguments {
+    [key: string]: any;
+}
+
+export interface UnnamedArguments {
+    [index: number]: any;
+    raw: string;
+}
+
+export interface SlashCommandProps {
+    name?: string;
+    callback?: (namedArguments: NamedArguments, unnamedArguments: UnnamedArguments) => string | any | Promise<string | any>;
+    helpString?: string;
+    splitUnnamedArgument?: boolean;
+    splitUnnamedArgumentCount?: number;
+    rawQuotes?: boolean;
+    aliases?: string[];
+    returns?: string;
+    namedArgumentList?: SlashCommandNamedArgument[];
+    unnamedArgumentList?: SlashCommandArgument[];
+}
+
+export interface SlashCommand {
+    name: string;
+    callback: (namedArguments: NamedArguments, unnamedArguments: UnnamedArguments) => string | any | Promise<string | any>;
+    helpString: string;
+    splitUnnamedArgument: boolean;
+    splitUnnamedArgumentCount?: number;
+    rawQuotes: boolean;
+    aliases: string[];
+    returns?: string;
+    namedArgumentList: SlashCommandNamedArgument[];
+    unnamedArgumentList: SlashCommandArgument[];
+    helpCache: Record<string, HTMLElement>;
+    helpDetailsCache: Record<string, DocumentFragment>;
+    isExtension: boolean;
+    isThirdParty: boolean;
+    source: string;
+    renderHelpItem: (key?: string) => HTMLElement;
+    renderHelpDetails: (key?: string) => DocumentFragment;
+}
+
+export interface PopupOptions {
+    okButton?: string | boolean | null;
+    cancelButton?: string | boolean | null;
+    rows?: number;
+    wide?: boolean;
+    wider?: boolean;
+    large?: boolean;
+    transparent?: boolean;
+    allowHorizontalScrolling?: boolean;
+    allowVerticalScrolling?: boolean;
+    leftAlign?: boolean;
+    animation?: string;
+    defaultResult?: number; // POPUP_RESULT
+    customButtons?: (CustomPopupButton | string)[];
+    customInputs?: CustomPopupInput[];
+    onClosing?: (popup: Popup) => Promise<boolean> | boolean;
+    onClose?: (popup: Popup) => Promise<void> | void;
+    onOpen?: (popup: Popup) => Promise<void> | void;
+    cropAspect?: number | null;
+    cropImage?: string | null;
+}
+
+export interface PopupUtil {
+    popups: Popup[];
+    lastResult: {
+        value: any;
+        result: number | null; // POPUP_RESULT
+        inputResults: Map<string, string | boolean> | undefined;
+    } | null;
+    isPopupOpen: () => boolean;
+    getTopmostModalLayer: () => HTMLElement;
+}
+
+export interface Popup {
+    type: number; // POPUP_TYPE
+    id: string;
+    dlg: HTMLDialogElement;
+    body: HTMLDivElement;
+    content: HTMLDivElement;
+    mainInput: HTMLTextAreaElement;
+    inputControls: HTMLDivElement;
+    buttonControls: HTMLDivElement;
+    okButton: HTMLDivElement;
+    cancelButton: HTMLDivElement;
+    closeButton: HTMLDivElement;
+    cropWrap: HTMLDivElement;
+    cropImage: HTMLImageElement;
+    defaultResult: number | null; // POPUP_RESULT
+    customButtons: (CustomPopupButton | string)[] | null;
+    customInputs: CustomPopupInput[];
+    onClosing: ((popup: Popup) => Promise<boolean> | boolean) | null;
+    onClose: ((popup: Popup) => Promise<void> | void) | null;
+    onOpen: ((popup: Popup) => Promise<void> | void) | null;
+    result: number; // POPUP_RESULT
+    value: any;
+    inputResults: Map<string, string | boolean> | undefined;
+    cropData: any;
+    lastFocus: HTMLElement | undefined;
+    show: () => Promise<any>;
+    complete: (result: number) => Promise<any>;
+    completeAffirmative: () => Promise<any>;
+    completeNegative: () => Promise<any>;
+    completeCancelled: () => Promise<any>;
+    setAutoFocus: (options?: { applyAutoFocus?: boolean }) => void;
 }
 
 // Main context interface
@@ -337,13 +850,13 @@ export interface ISillyTavernContext {
     saveReply: (message: any) => void;
     substituteParams: (text: string) => string;
     substituteParamsExtended: (text: string, params: Record<string, any>) => string;
-    SlashCommandParser: any;
-    SlashCommand: any;
-    SlashCommandArgument: any;
-    SlashCommandNamedArgument: any;
+    SlashCommandParser: SlashCommandParser;
+    SlashCommand: SlashCommand;
+    SlashCommandArgument: SlashCommandArgument;
+    SlashCommandNamedArgument: SlashCommandNamedArgument;
     ARGUMENT_TYPE: IArgumentTypes;
     executeSlashCommandsWithOptions: (text: string, options: any) => any;
-    registerSlashCommand: (command: any) => void;
+    registerSlashCommand: (command: SlashCommand) => void;
     executeSlashCommands: (text: string) => any;
     timestampToMoment: any;
     registerHelper: () => void;
@@ -410,9 +923,9 @@ export interface ISillyTavernContext {
     getChatCompletionModel: () => string;
     printMessages: (messages: IChatMessage[]) => void;
     clearChat: () => void;
-    ChatCompletionService: any;
-    TextCompletionService: any;
-    ConnectionManagerRequestService: any;
+    ChatCompletionService: ChatCompletionService;
+    TextCompletionService: TextCompletionService;
+    ConnectionManagerRequestService: ConnectionManagerRequestService;
     updateReasoningUI: (reasoning: string) => void;
     parseReasoningFromString: (reasoning: string) => any;
     unshallowCharacter: (char: any) => any;
