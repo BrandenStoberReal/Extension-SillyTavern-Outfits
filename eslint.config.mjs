@@ -1,5 +1,5 @@
-import {defineConfig} from 'eslint/config';
-import globals from 'globals';
+import { defineConfig } from 'eslint/config';
+import globals from 'Extension-SillyTavern-Outfits/globals.d.ts';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 

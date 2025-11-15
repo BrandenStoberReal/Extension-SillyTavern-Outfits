@@ -12,7 +12,7 @@
     "include": [
         "src/**/*.ts",
         "src/**/*.tsx",
-        "globals.d.ts"
+      "globals.d.ts"
     ],
     "exclude": [
         "node_modules",
