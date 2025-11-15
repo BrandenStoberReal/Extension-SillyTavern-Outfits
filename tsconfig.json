@@ -13,8 +13,6 @@
         "src/**/*.ts",
         "src/**/*.tsx",
       "globals.d.ts",
-      "../types/*.ts",
-      "../types/*.tsx",
     ],
     "exclude": [
         "node_modules",

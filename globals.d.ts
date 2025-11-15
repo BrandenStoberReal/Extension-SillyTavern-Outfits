@@ -1,4 +1,4 @@
-import {ISillyTavernContext} from "../types/SillytavernContext.ts";
+import {ISillyTavernContext} from "./src/types/SillytavernContext.ts";
 
 export {};
 
