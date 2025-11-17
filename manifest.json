@@ -1,12 +1,12 @@
 {
-    "display_name": "Outfit Tracking Extension",
-    "loading_order": 1,
-    "requires": [],
-    "optional": [],
-    "js": "dist/index.js",
-    "css": "",
-    "author": "Branden",
-    "version": "1.0.0",
-    "homePage": "https://github.com/BrandenStoberReal/Extension-SillyTavern-Outfits",
-    "auto_update": true
+  "display_name": "Outfit Tracking Extension",
+  "loading_order": 1,
+  "requires": [],
+  "optional": [],
+  "js": "dist/index.js",
+  "css": "",
+  "author": "Branden",
+  "version": "1.0.0",
+  "homePage": "https://github.com/BrandenStoberReal/Extension-SillyTavern-Outfits",
+  "auto_update": true
 }

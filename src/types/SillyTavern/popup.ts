@@ -1,5 +1,4 @@
-
-import { JQuery } from './global';
+import {JQuery} from './global';
 
 export interface PopupOptions {
     okButton?: string | boolean | null;
@@ -26,27 +25,24 @@ export interface PopupOptions {
 export interface PopupUtil {
     popups: any[]; // Using any to avoid circular reference
     lastResult: { value: any; result: POPUP_RESULT | number; inputResults: Map<string, string | boolean> } | null;
+
     isPopupOpen(): boolean;
+
     getTopmostModalLayer(): HTMLElement;
 }
 
 // Define the static methods separately for easier reference
 export interface PopupShowHelper {
     input(header?: string | null, text?: string, defaultValue?: string, popupOptions?: PopupOptions): Promise<string | null>;
+
     confirm(header?: string | null, text?: string, popupOptions?: PopupOptions): Promise<POPUP_RESULT | null>;
+
     text(header?: string | null, text?: string, popupOptions?: PopupOptions): Promise<POPUP_RESULT | null>;
 }
 
 export declare class Popup {
-    constructor(
-        content: JQuery<HTMLElement> | string | Element,
-        type: POPUP_TYPE,
-        inputValue?: string,
-        options?: PopupOptions
-    );
     static show: PopupShowHelper;
     static util: PopupUtil;
-
     // Properties
     type: POPUP_TYPE;
     id: string;
@@ -73,12 +69,24 @@ export declare class Popup {
     cropData: any;
     lastFocus: HTMLElement;
 
+    constructor(
+        content: JQuery<HTMLElement> | string | Element,
+        type: POPUP_TYPE,
+        inputValue?: string,
+        options?: PopupOptions
+    );
+
     // Methods
     show(): Promise<string | number | boolean | null>;
+
     complete(result: POPUP_RESULT | number): Promise<string | number | boolean | undefined | null>;
+
     completeAffirmative(): Promise<string | number | boolean | undefined | null>;
+
     completeNegative(): Promise<string | number | boolean | undefined | null>;
+
     completeCancelled(): Promise<string | number | boolean | undefined | null>;
+
     setAutoFocus(options?: { applyAutoFocus?: boolean }): void;
 }
 

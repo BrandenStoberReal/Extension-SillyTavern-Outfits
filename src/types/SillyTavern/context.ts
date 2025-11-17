@@ -1,4 +1,3 @@
-
 export interface ContextSettings {
     preset: string;
     story_string: string;

@@ -1,4 +1,3 @@
-
 export interface SlashCommand {
     name: string;
     callback: (args: NamedArguments, text: UnnamedArguments) => string | Promise<string>;
@@ -17,6 +16,7 @@ export interface SlashCommand {
     source: string;
 
     renderHelpItem(key?: string): HTMLElement;
+
     renderHelpDetails(key?: string): DocumentFragment;
 }
 
@@ -26,17 +26,23 @@ export interface SlashCommandAbortController {
         paused: boolean;
         isQuiet: boolean;
     };
+
     abort(reason?: string, quiet?: boolean): void;
+
     pause(reason?: string): void;
+
     continue(reason?: string): void;
 }
 
 export interface SlashCommandDebugController {
     stack: any[];
     cmdStack: any[];
+
     // Additional properties based on how it's used
     step(): void;
+
     continue(): void;
+
     pause(): void;
 }
 
@@ -46,17 +52,22 @@ export interface SlashCommandScope {
     parent?: SlashCommandScope;
 
     setVariable(name: string, value: any, isLocal?: boolean): void;
+
     getVariable(name: string, isLocal?: boolean): any;
+
     existsVariable(name: string, isLocal?: boolean): boolean;
+
     deleteVariable(name: string, isLocal?: boolean): boolean;
+
     getLocalVariables(): Record<string, any>;
+
     getInheritedVariables(): Record<string, any>;
+
     clone(): SlashCommandScope;
 }
 
 export interface SlashCommandClosure {
     rawText: string;
-    execute(): Promise<SlashCommandClosureResult>;
     abortController: SlashCommandAbortController;
     breakController: SlashCommandBreakController;
     debugController: SlashCommandDebugController;
@@ -68,6 +79,9 @@ export interface SlashCommandClosure {
     isAborted: boolean;
     isQuietlyAborted: boolean;
     abortReason: string;
+
+    execute(): Promise<SlashCommandClosureResult>;
+
     getCopy(): SlashCommandClosure;
 }
 
@@ -142,11 +156,12 @@ export interface SlashCommandEnumValue {
 
 // New interfaces based on the JavaScript implementation
 export interface NamedArguments {
-    [key: string]: string | number | boolean | (string | number | boolean)[] | SlashCommandClosure | SlashCommandScope | SlashCommandAbortController | SlashCommandDebugController | undefined;
     // Special properties that are passed in named arguments
     _scope?: SlashCommandScope;
     _abortController?: SlashCommandAbortController;
     _debugController?: SlashCommandDebugController;
+
+    [key: string]: string | number | boolean | (string | number | boolean)[] | SlashCommandClosure | SlashCommandScope | SlashCommandAbortController | SlashCommandDebugController | undefined;
 }
 
 export type UnnamedArguments = string | number | boolean | (string | number | boolean)[] | SlashCommandClosure | null;
@@ -164,6 +179,7 @@ export interface SlashCommandClosureResult {
 export interface SlashCommandBreakController {
     shouldBreak: boolean;
     breakReason: string;
+
     reset(): void;
 }
 
@@ -243,48 +259,92 @@ export interface SlashCommandParser {
 
     // Methods
     parse(text: string, verifyCommandNames?: boolean, flags?: Record<string, boolean>, abortController?: SlashCommandAbortController, debugController?: SlashCommandDebugController): SlashCommandClosure;
+
     getNameAt(text: string, index: number): Promise<AutoCompleteNameResult | null>;
+
     take(length?: number): string;
+
     discardWhitespace(): void;
+
     testSymbol(sequence: string | RegExp, offset?: number): boolean;
+
     testSymbolLooseyGoosey(sequence: string | RegExp, offset?: number): boolean;
+
     replaceGetvar(value: string): string;
+
     testClosure(): boolean;
+
     testClosureEnd(): boolean;
+
     parseClosure(isRoot?: boolean): SlashCommandClosure;
+
     testBreakPoint(): boolean;
+
     parseBreakPoint(): SlashCommandBreakPoint;
+
     testBreak(): boolean;
+
     parseBreak(): SlashCommandBreak;
+
     testBlockComment(): boolean;
+
     testBlockCommentEnd(): boolean;
+
     parseBlockComment(): void;
+
     testComment(): boolean;
+
     testCommentEnd(): boolean;
+
     parseComment(): void;
+
     testParserFlag(): boolean;
+
     testParserFlagEnd(): boolean;
+
     parseParserFlag(): void;
+
     testRunShorthand(): boolean;
+
     testRunShorthandEnd(): boolean;
+
     parseRunShorthand(): SlashCommandExecutor;
+
     testCommand(): boolean;
+
     testCommandEnd(): boolean;
+
     parseCommand(): SlashCommandExecutor;
+
     testNamedArgument(): boolean;
+
     parseNamedArgument(): SlashCommandNamedArgumentAssignment;
+
     testUnnamedArgument(): boolean;
+
     testUnnamedArgumentEnd(): boolean;
+
     parseUnnamedArgument(split?: boolean, splitCount?: number | null, rawQuotes?: boolean): SlashCommandUnnamedArgumentAssignment[];
+
     testQuotedValue(): boolean;
+
     testQuotedValueEnd(): boolean;
+
     parseQuotedValue(): string;
+
     testListValue(): boolean;
+
     testListValueEnd(): boolean;
+
     parseListValue(): string;
+
     testValue(): boolean;
+
     testValueEnd(): boolean;
+
     parseValue(): string;
+
     indexMacros(offset: number, text: string): void;
+
     getHelpString(): string;
 }

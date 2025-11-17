@@ -1,4 +1,3 @@
-
 export interface StScriptSettings {
     parser: {
         flags: {

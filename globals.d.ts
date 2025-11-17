@@ -4,6 +4,7 @@ export {};
 
 interface SillyTavernGlobal {
     getContext(): ISillyTavernContext;
+
     [key: string]: any; // Allow for other properties
 }
 

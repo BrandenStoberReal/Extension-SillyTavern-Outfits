@@ -1,13 +1,12 @@
-
-import { ConnectionProfile } from "./services";
-import { QuickReplyConfig, QuickReplySlot, QuickReplyV2Settings } from "./quick-reply";
-import { Style } from "./style";
-import { InstructSettings } from "./instruct";
-import { ContextSettings } from "./context";
-import { SysPromptSettings } from "./sys-prompt";
-import { ReasoningSettings } from "./reasoning";
-import { PersonaDescription } from "./persona";
-import { StScriptSettings } from "./st-script";
+import {ConnectionProfile} from "./services";
+import {QuickReplySlot, QuickReplyV2Settings} from "./quick-reply";
+import {Style} from "./style";
+import {InstructSettings} from "./instruct";
+import {ContextSettings} from "./context";
+import {SysPromptSettings} from "./sys-prompt";
+import {ReasoningSettings} from "./reasoning";
+import {PersonaDescription} from "./persona";
+import {StScriptSettings} from "./st-script";
 
 export interface ExtensionSettings {
     apiUrl: string;
@@ -566,7 +565,7 @@ export interface TextCompletionSettings {
     top_k: number;
     top_a: number;
     tfs: number;
-epsilon_cutoff: number;
+    epsilon_cutoff: number;
     eta_cutoff: number;
     typical_p: number;
     min_p: number;

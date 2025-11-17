@@ -1,7 +1,6 @@
-
-import { ChatCompletionMessage } from './chat-completion-message';
-import { StreamResponse } from './streaming';
-import { InstructSettings } from './instruct';
+import {ChatCompletionMessage} from './chat-completion-message';
+import {StreamResponse} from './streaming';
+import {InstructSettings} from './instruct';
 
 export interface ChatCompletionPayload {
     stream?: boolean;
@@ -26,9 +25,15 @@ export interface ExtractedData {
 
 export interface ChatCompletionService {
     TYPE: string;
+
     createRequestData(custom: Partial<ChatCompletionPayload>): ChatCompletionPayload;
+
     sendRequest(data: ChatCompletionPayload, extractData?: boolean, signal?: AbortSignal | null): Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
-    processRequest(custom: Partial<ChatCompletionPayload>, options: { presetName?: string }, extractData?: boolean, signal?: AbortSignal | null): Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+
+    processRequest(custom: Partial<ChatCompletionPayload>, options: {
+        presetName?: string
+    }, extractData?: boolean, signal?: AbortSignal | null): Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+
     presetToGeneratePayload(preset: any, customParams?: any): ChatCompletionPayload;
 }
 
@@ -51,10 +56,17 @@ export interface TextCompletionPayload extends TextCompletionRequestBase {
 
 export interface TextCompletionService {
     TYPE: string;
-    createRequestData(custom: Record<string, any> & TextCompletionRequestBase & { prompt: string }): TextCompletionPayload;
+
+    createRequestData(custom: Record<string, any> & TextCompletionRequestBase & {
+        prompt: string
+    }): TextCompletionPayload;
+
     sendRequest(data: TextCompletionPayload, extractData?: boolean, signal?: AbortSignal | null): Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+
     processRequest(
-        custom: Record<string, any> & TextCompletionRequestBase & { prompt: (ChatCompletionMessage & { ignoreInstruct?: boolean })[] | string },
+        custom: Record<string, any> & TextCompletionRequestBase & {
+            prompt: (ChatCompletionMessage & { ignoreInstruct?: boolean })[] | string
+        },
         options?: {
             presetName?: string;
             instructName?: string;
@@ -63,6 +75,7 @@ export interface TextCompletionService {
         extractData?: boolean,
         signal?: AbortSignal | null,
     ): Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+
     presetToGeneratePayload(preset: any, customPreset?: any): TextCompletionPayload;
 }
 
@@ -87,7 +100,9 @@ export interface ConnectionManagerRequestService {
         includeInstruct: boolean;
         instructSettings: Partial<InstructSettings>;
     };
+
     getAllowedTypes(): Record<string, string>;
+
     sendRequest(
         profileId: string,
         prompt: string | (any & { ignoreInstruct?: boolean })[],
@@ -95,9 +110,13 @@ export interface ConnectionManagerRequestService {
         custom?: Partial<any>,
         overridePayload?: Record<string, any>,
     ): Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>;
+
     getSupportedProfiles(): ConnectionProfile[];
+
     isProfileSupported(profile?: ConnectionProfile): boolean;
+
     validateProfile(profile?: ConnectionProfile): { selected: string; source?: string; type?: string };
+
     handleDropdown(
         selector: string,
         initialSelectedProfileId: string,

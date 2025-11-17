@@ -13,4 +13,5 @@ Template repository for SillyTavern extensions using TypeScript and Webpack (no 
 7. Minimized bundle will appear in `dist`, ready to be plugged into SillyTavern.
 
 > [!TIP]
-> If you want to test your extension live, clone the repo into the `/public/scripts/extensions/third-party` of your SillyTavern installation.
+> If you want to test your extension live, clone the repo into the `/public/scripts/extensions/third-party` of your
+> SillyTavern installation.

@@ -1,4 +1,3 @@
-
 export interface ChatMessage {
     name: string;
     is_user: boolean;

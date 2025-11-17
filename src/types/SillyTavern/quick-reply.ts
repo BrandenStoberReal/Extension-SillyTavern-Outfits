@@ -1,4 +1,3 @@
-
 export interface QuickReplySlot {
     mes: string;
     label: string;

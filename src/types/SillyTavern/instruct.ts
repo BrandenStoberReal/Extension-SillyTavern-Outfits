@@ -1,5 +1,4 @@
-
-import { NamesBehavior } from "./names-behavior";
+import {NamesBehavior} from "./names-behavior";
 
 export interface InstructSettings {
     names_behavior: NamesBehavior;

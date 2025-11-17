@@ -1,4 +1,3 @@
-
 export interface ReasoningSettings {
     name: string;
     auto_parse: boolean;

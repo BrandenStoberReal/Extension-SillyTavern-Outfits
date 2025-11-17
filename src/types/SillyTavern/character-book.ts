@@ -1,4 +1,3 @@
-
 export interface BookEntry {
     id: number;
     keys: string[];
