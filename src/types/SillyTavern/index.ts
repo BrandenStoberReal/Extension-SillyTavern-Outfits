@@ -12,7 +12,6 @@ export * from './events';
 export * from './streaming';
 export * from './tools';
 export * from './worker';
-export * from './global';
 export * from './names-behavior';
 export * from './style';
 export * from './instruct';

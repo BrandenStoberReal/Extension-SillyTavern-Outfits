@@ -10,5 +10,6 @@ interface SillyTavernGlobal {
 
 declare global {
     const SillyTavern: SillyTavernGlobal;
+    type JQuery<T = HTMLElement> = any;
     // Add global type declarations here
 }
