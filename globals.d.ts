@@ -1,4 +1,4 @@
-import {ISillyTavernContext} from "./src/types/SillytavernContext.ts";
+import {ISillyTavernContext} from './src/types/SillytavernContext.ts';
 
 export {};
 
@@ -10,6 +10,6 @@ interface SillyTavernGlobal {
 
 declare global {
     const SillyTavern: SillyTavernGlobal;
-    type JQuery<T = HTMLElement> = any;
+    type JQuery = any;
     // Add global type declarations here
 }

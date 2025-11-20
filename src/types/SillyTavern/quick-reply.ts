@@ -27,12 +27,12 @@ export interface QuickReply {
     executeOnNewChat: boolean;
     executeBeforeGeneration: boolean;
     automationId: string;
-    onExecute: Function;
-    onDebug: Function;
-    onDelete: Function;
-    onUpdate: Function;
-    onInsertBefore: Function;
-    onTransfer: Function;
+    onExecute: () => void;
+    onDebug: () => void;
+    onDelete: () => void;
+    onUpdate: () => void;
+    onInsertBefore: () => void;
+    onTransfer: () => void;
     dom: HTMLElement;
     domIcon: HTMLElement;
     domLabel: HTMLElement;
@@ -69,7 +69,7 @@ export interface QuickReplySet {
     qrList: QuickReply[];
     idIndex: number;
     isDeleted: boolean;
-    save: Function;
+    save: () => void;
     dom: HTMLElement;
     settingsDom: HTMLElement;
 }
@@ -84,8 +84,8 @@ export interface QuickReplyV2Settings {
 export interface QuickReplyConfig {
     setList: QuickReplySetLink[];
     scope: 'global' | 'chat' | 'character';
-    onUpdate: Function;
-    onRequestEditSet: Function;
+    onUpdate: () => void;
+    onRequestEditSet: (set: QuickReplySet) => void;
     dom: HTMLElement;
     setListDom: HTMLElement;
 }
@@ -94,8 +94,8 @@ export interface QuickReplySetLink {
     set: QuickReplySet;
     isVisible: boolean;
     index: number;
-    onUpdate: Function;
-    onRequestEditSet: Function;
-    onDelete: Function;
+    onUpdate: () => void;
+    onRequestEditSet: (set: QuickReplySet) => void;
+    onDelete: () => void;
     settingsDom: HTMLElement;
 }

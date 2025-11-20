@@ -1,4 +1,4 @@
-import {CharacterBook} from "./character-book";
+import {CharacterBook} from './character-book';
 
 export interface Character {
     name: string;

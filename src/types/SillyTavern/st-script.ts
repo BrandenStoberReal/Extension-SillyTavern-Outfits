@@ -1,8 +1,8 @@
 export interface StScriptSettings {
     parser: {
         flags: {
-            "1": boolean;
-            "2": boolean;
+            '1': boolean;
+            '2': boolean;
         };
     };
     autocomplete: {

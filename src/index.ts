@@ -1,6 +1,30 @@
 import './css/style.css';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const {Popup} = SillyTavern.getContext();
+// Register with ValueTracker plugin on startup
+const registerWithValueTracker = async () => {
+    try {
+        const response = await fetch('/api/plugins/valuetracker/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                extensionId: 'extension-valuetracker-outfits',
+            }),
+        });
 
-// Popup.show.text(message);
+        const result = await response.json();
+
+        if (!response.ok) {
+            console.error('Failed to register with ValueTracker:', result);
+            return;
+        }
+
+        console.log('Successfully registered with ValueTracker:', result.message);
+    } catch (error) {
+        console.error('Error registering with ValueTracker:', error);
+    }
+};
+
+// Register on extension startup
+registerWithValueTracker();

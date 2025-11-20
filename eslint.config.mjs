@@ -1,11 +1,17 @@
 import {defineConfig} from 'eslint/config';
-import globals from 'Extension-SillyTavern-Outfits/globals.d.ts';
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
     {files: ['**/*.{js,mjs,cjs,ts}']},
-    {files: ['**/*.{js,mjs,cjs,ts}'], languageOptions: {globals: globals.browser}},
+    {
+        files: ['**/*.{js,mjs,cjs,ts}'], languageOptions: {
+            globals: {
+                browser: true,
+                es2021: true,
+            }
+        }
+    },
     {files: ['**/*.{js,mjs,cjs,ts}'], plugins: {js}, extends: ['js/recommended']},
     tseslint.configs.recommended,
     {
@@ -17,6 +23,7 @@ export default defineConfig([
             '@typescript-eslint/no-unused-vars': ['error', {args: 'none'}],
             'no-control-regex': 'off',
             'no-constant-condition': ['error', {checkLoops: false}],
+            '@typescript-eslint/no-explicit-any': 'off',
             'require-yield': 'off',
             'quotes': ['error', 'single'],
             'semi': ['error', 'always'],

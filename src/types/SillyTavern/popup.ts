@@ -1,4 +1,3 @@
-import {JQuery} from './global';
 
 export interface PopupOptions {
     okButton?: string | boolean | null;
@@ -70,7 +69,7 @@ export declare class Popup {
     lastFocus: HTMLElement;
 
     constructor(
-        content: JQuery<HTMLElement> | string | Element,
+        content: JQuery | string | Element,
         type: POPUP_TYPE,
         inputValue?: string,
         options?: PopupOptions

@@ -1,1 +1,1 @@
-export type NamesBehavior = number | "force" | "strip" | "system";
+export type NamesBehavior = number | 'force' | 'strip' | 'system';

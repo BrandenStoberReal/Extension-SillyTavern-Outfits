@@ -218,15 +218,15 @@ export interface SlashCommandExecutionError extends Error {
 }
 
 export declare enum ARGUMENT_TYPE {
-    STRING = "string",
-    NUMBER = "number",
-    RANGE = "range",
-    BOOLEAN = "bool",
-    VARIABLE_NAME = "varname",
-    CLOSURE = "closure",
-    SUBCOMMAND = "subcommand",
-    LIST = "list",
-    DICTIONARY = "dictionary",
+    STRING = 'string',
+    NUMBER = 'number',
+    RANGE = 'range',
+    BOOLEAN = 'bool',
+    VARIABLE_NAME = 'varname',
+    CLOSURE = 'closure',
+    SUBCOMMAND = 'subcommand',
+    LIST = 'list',
+    DICTIONARY = 'dictionary',
 }
 
 export interface SlashCommandParser {

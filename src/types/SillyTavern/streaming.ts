@@ -16,7 +16,11 @@ export interface StreamingProcessor {
     toolCalls: any[];
     result: string;
 
-    constructor(type: string, force_name2: boolean, generation_started: Date, continue_mag: string, promptReasoning: any): StreamingProcessor;
+    readonly type: string;
+    readonly force_name2: boolean;
+    readonly generation_started: Date;
+    readonly continue_mag: string;
+    readonly promptReasoning: any;
 
     generate(): Promise<any>;
 
