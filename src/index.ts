@@ -1,4 +1,5 @@
 import './css/style.css';
+import {logError, logInfo} from './utils/logger';
 
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
@@ -16,13 +17,13 @@ const registerWithValueTracker = async () => {
         const result = await response.json();
 
         if (!response.ok) {
-            console.error('Failed to register with ValueTracker:', result);
+            logError('Failed to register with ValueTracker:', result);
             return;
         }
 
-        console.log('Successfully registered with ValueTracker:', result.message);
+        logInfo('Successfully registered with ValueTracker:', result.message);
     } catch (error) {
-        console.error('Error registering with ValueTracker:', error);
+        logError('Error registering with ValueTracker:', error);
     }
 };
 

@@ -9,8 +9,8 @@ export default defineConfig([
             globals: {
                 browser: true,
                 es2021: true,
-            }
-        }
+            },
+        },
     },
     {files: ['**/*.{js,mjs,cjs,ts}'], plugins: {js}, extends: ['js/recommended']},
     tseslint.configs.recommended,
