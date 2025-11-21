@@ -16,7 +16,10 @@ const registerWithValueTracker = async () => {
 
         const result = await response.json();
 
-        if (!response.ok) {
+        if (response.status === 404) {
+            logError("Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?", result);
+            return;
+        } else if (!response.ok) {
             logError('Failed to register with ValueTracker:', result);
             return;
         }
