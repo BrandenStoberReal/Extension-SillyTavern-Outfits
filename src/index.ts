@@ -4,13 +4,13 @@ import {logError, logInfo} from './utils/logger';
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
     try {
-        const response = await fetch('/api/plugins/valuetracker/register', {
-            method: 'POST',
+        const response = await fetch(API_ROOT_URL + ApiEndpoints.Register, {
+            method: HttpMethod.POST,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': HttpContentType.JSON,
             },
             body: JSON.stringify({
-                extensionId: 'extension-valuetracker-outfits',
+                extensionId: EXTENSION_ID,
             }),
         });
 

@@ -11,5 +11,30 @@ interface SillyTavernGlobal {
 declare global {
     const SillyTavern: SillyTavernGlobal;
     type JQuery = any;
+
     // Add global type declarations here
+    const API_ROOT_URL = '/api/plugins/valuetracker'
+    const EXTENSION_ID = 'extension-valuetracker-outfits'
+
+    enum ApiEndpoints {
+        Register = '/register',
+    }
+
+    enum HttpHeader {
+        ContentType = 'Content-Type',
+    }
+
+    enum HttpContentType {
+        JSON = 'application/json',
+    }
+
+    enum HttpMethod {
+        GET = 'GET',
+        HEAD = 'HEAD',
+        POST = 'POST',
+        PUT = 'PUT',
+        PATCH = 'PATCH',
+        DELETE = 'DELETE',
+        OPTIONS = 'OPTIONS',
+    }
 }
