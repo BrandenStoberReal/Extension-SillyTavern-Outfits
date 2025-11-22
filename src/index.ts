@@ -37,20 +37,39 @@ enum HttpContentType {
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
     try {
+        // Get the SillyTavern context to access authentication headers
+        const context = SillyTavern.getContext();
+        const headers = {
+            ...context.getRequestHeaders(),  // Include standard ST authentication headers
+            'Content-Type': HttpContentType.JSON,
+        };
+
         const response = await fetch(API_ROOT_URL + ApiEndpoints.Register, {
             method: HttpMethod.POST,
-            headers: {
-                'Content-Type': HttpContentType.JSON,
-            },
+            headers: headers,
             body: JSON.stringify({
                 extensionId: EXTENSION_ID,
             }),
         });
 
-        const result = await response.json();
+        // Check if response is actually JSON before parsing
+        const contentType = response.headers.get('content-type');
+        let result;
+
+        if (contentType && contentType.includes('application/json')) {
+            result = await response.json();
+        } else {
+            // If not JSON, get text content for debugging
+            const textResult = await response.text();
+            console.warn('Non-JSON response received:', textResult);
+            result = {message: textResult, status: response.status};
+        }
 
         if (response.status === 404) {
             console.error("Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?", result);
+            return;
+        } else if (response.status === 403) {
+            console.error("Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:", result);
             return;
         } else if (!response.ok) {
             console.error('Failed to register with ValueTracker:', result);
