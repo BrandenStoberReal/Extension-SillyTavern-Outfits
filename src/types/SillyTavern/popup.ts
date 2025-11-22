@@ -69,7 +69,7 @@ export declare class Popup {
     lastFocus: HTMLElement;
 
     constructor(
-        content: JQuery | string | Element,
+        content: any | string | Element,
         type: POPUP_TYPE,
         inputValue?: string,
         options?: PopupOptions

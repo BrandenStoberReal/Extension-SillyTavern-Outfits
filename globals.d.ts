@@ -17,9 +17,33 @@ interface SillyTavernGlobal {
     };
 }
 
+interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
+    length: number;
+
+    on(events: string, handler: (eventObject: JQuery.Event<TElement>) => any): this;
+
+    prop(name: string): any | undefined;
+
+    prop(name: string, value: any): this;
+
+    append(content: any): this;
+
+    [index: number]: TElement;
+}
+
+interface JQueryStatic {
+    (selector: string, context?: any): JQuery;
+
+    (element: HTMLElement): JQuery;
+
+    (object: {}): JQuery;
+
+    (callback: (jQueryAlias?: JQueryStatic) => void): any;
+}
+
 declare global {
     const SillyTavern: SillyTavernGlobal;
-    type JQuery = any;
+    const $: JQueryStatic;
 
     // Add global type declarations here
     const API_ROOT_URL = '/api/plugins/valuetracker'
