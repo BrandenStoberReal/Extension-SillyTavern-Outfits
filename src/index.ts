@@ -37,7 +37,6 @@ const MODULE_NAME = 'outfit_extension';
 
 // Default settings for the extension
 const defaultSettings = Object.freeze({
-    enabled: false,
     debugMode: false
 });
 
@@ -59,6 +58,11 @@ function getSettings() {
         }
     }
 
+    // Remove the deprecated 'enabled' setting if it exists
+    if ('enabled' in extensionSettings[MODULE_NAME]) {
+        delete extensionSettings[MODULE_NAME].enabled;
+    }
+
     return extensionSettings[MODULE_NAME];
 }
 
@@ -72,14 +76,9 @@ const initializeExtension = async () => {
         // Listen for the app ready event
         eventSource.on(event_types.APP_READY, () => {
             console.log('Outfit Extension: App is ready');
-            const settings = getSettings();
-            if (settings.enabled) {
-                console.log('Outfit Extension: Initialized and enabled');
-                // Register with ValueTracker when extension is enabled
-                registerWithValueTracker();
-            } else {
-                console.log('Outfit Extension: Initialized but disabled');
-            }
+            // Always register with ValueTracker when the app is ready
+            registerWithValueTracker();
+            console.log('Outfit Extension: Initialized');
         });
 
         // Listen for chat changes
@@ -110,12 +109,7 @@ const registerSlashCommands = () => {
             (globalThis as any).SlashCommand.fromProps({
                 name: 'outfit',
                 callback: (namedArgs: any, unnamedArgs: any) => {
-                    const settings = getSettings();
-                    if (settings.enabled) {
-                        return `Outfit Extension is currently enabled. Command: ${unnamedArgs.toString()}`;
-                    } else {
-                        return 'Outfit Extension is currently disabled.';
-                    }
+                    return `Outfit Extension is active. Command: ${unnamedArgs.toString()}`;
                 },
                 aliases: ['o'],
                 returns: 'outfit extension status',
@@ -152,11 +146,6 @@ function registerSettingsPanel() {
                 </div>
                 <div class="inline-drawer-content">
                     <div class="flex-container">
-                        <label for="outfit-extension-enabled">Enable Outfit Extension</label>
-                        <input type="checkbox" id="outfit-extension-enabled"
-                                ${getSettings().enabled ? 'checked' : ''}>
-                    </div>
-                    <div class="flex-container">
                         <label for="outfit-extension-debug">Debug Mode</label>
                         <input type="checkbox" id="outfit-extension-debug"
                                 ${getSettings().debugMode ? 'checked' : ''}>
@@ -176,18 +165,7 @@ function registerSettingsPanel() {
                 if (typeof $ !== 'undefined') {
                     $("#extensions_settings").append(settingsHtml);
 
-                    // Set up event handlers for the checkboxes using jQuery
-                    $("#outfit-extension-enabled").on("input", function (this: HTMLElement) {
-                        const settings = getSettings();
-                        settings.enabled = $(this).prop('checked');
-                        SillyTavern.getContext().saveSettingsDebounced();
-
-                        // Register with ValueTracker when extension is enabled
-                        if (settings.enabled) {
-                            registerWithValueTracker();
-                        }
-                    });
-
+                    // Set up event handler for the debug checkbox using jQuery
                     $("#outfit-extension-debug").on("input", function (this: HTMLElement) {
                         const settings = getSettings();
                         settings.debugMode = $(this).prop('checked');
