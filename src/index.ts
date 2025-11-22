@@ -248,11 +248,10 @@ const registerSettingsPanel = () => {
     }
 };
 
-// Initialize the extension when the DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initializeExtension();
-    registerSlashCommands();
-    registerSettingsPanel();
+// Actual execution START
 
-    console.log('Outfit Extension: DOM Content Loaded - Initialization complete');
-});
+initializeExtension();
+registerSlashCommands();
+registerSettingsPanel();
+
+console.log(`${EXTENSION_NAME}: Initialization complete`);
