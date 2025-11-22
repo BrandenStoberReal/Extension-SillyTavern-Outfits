@@ -3,6 +3,37 @@ import './css/style.css';
 // Define extension name as a global constant
 const EXTENSION_NAME = 'Outfit Extension';
 
+// Define API constants
+const API_ROOT_URL = '/api/plugins/valuetracker';
+const EXTENSION_ID = 'extension-valuetracker-outfits';
+
+// Define module name for settings
+const MODULE_NAME = 'outfit_extension';
+
+// Default settings for the extension
+const defaultSettings = Object.freeze({
+    debugMode: false
+});
+
+// Define API enums
+enum ApiEndpoints {
+    Register = '/register',
+}
+
+enum HttpMethod {
+    GET = 'GET',
+    HEAD = 'HEAD',
+    POST = 'POST',
+    PUT = 'PUT',
+    PATCH = 'PATCH',
+    DELETE = 'DELETE',
+    OPTIONS = 'OPTIONS',
+}
+
+enum HttpContentType {
+    JSON = 'application/json',
+}
+
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
     try {
@@ -31,14 +62,6 @@ const registerWithValueTracker = async () => {
         console.error('Error registering with ValueTracker:', error);
     }
 };
-
-// Define module name for settings
-const MODULE_NAME = 'outfit_extension';
-
-// Default settings for the extension
-const defaultSettings = Object.freeze({
-    debugMode: false
-});
 
 // Function to get or initialize settings
 function getSettings() {
