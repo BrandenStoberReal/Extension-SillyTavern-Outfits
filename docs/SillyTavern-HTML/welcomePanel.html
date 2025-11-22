@@ -1,0 +1,93 @@
+<div class="welcomePanel">
+    <div class="welcomeHeaderTitle">
+        <img alt="SillyTavern Logo" class="welcomeHeaderLogo" src="img/logo.png">
+        <span class="welcomeHeaderVersionDisplay">{{version}}</span>
+        <div class="mes_button showRecentChats" data-i18n="[title]Show recent chats" title="Show recent chats">
+            <i class="fa-solid fa-circle-chevron-down fa-fw fa-lg"></i>
+        </div>
+        <div class="mes_button hideRecentChats" data-i18n="[title]Hide recent chats" title="Hide recent chats">
+            <i class="fa-solid fa-circle-xmark fa-fw fa-lg"></i>
+        </div>
+    </div>
+    <div class="welcomeHeader">
+        <div class="recentChatsTitle" data-i18n="Recent Chats">
+            Recent Chats
+        </div>
+        <div class="welcomeShortcuts">
+            <a class="menu_button menu_button_icon" href="https://docs.sillytavern.app/" target="_blank">
+                <i class="fa-solid fa-question-circle"></i>
+                <span data-i18n="Docs">Docs</span>
+            </a>
+            <a class="menu_button menu_button_icon" href="https://github.com/SillyTavern/SillyTavern" target="_blank">
+                <i class="fa-brands fa-github"></i>
+                <span data-i18n="GitHub">GitHub</span>
+            </a>
+            <a class="menu_button menu_button_icon" href="https://discord.gg/sillytavern" target="_blank">
+                <i class="fa-brands fa-discord"></i>
+                <span data-i18n="Discord">Discord</span>
+            </a>
+            <span class="welcomeShortcutsSeparator">&vert;</span>
+            <button class="openTemporaryChat menu_button menu_button_icon">
+                <i class="fa-solid fa-comment-dots"></i>
+                <span data-i18n="Temporary Chat">Temporary Chat</span>
+            </button>
+        </div>
+    </div>
+    <div class="welcomeRecent">
+        <div class="recentChatList">
+            {{#if empty}}
+            <div class="noRecentChat">
+                <i class="fa-solid fa-comment-dots"></i>
+                <span data-i18n="No recent chats">No recent chats</span>
+            </div>
+            {{/if}}
+            {{#each chats}}
+            {{#with this}}
+            <div class="recentChat {{#if hidden}}hidden{{/if}} {{#if is_group}}group{{/if}}" data-avatar="{{avatar}}"
+                 data-file="{{chat_name}}" data-group="{{group}}">
+                <div class="avatar" title="[Character] {{char_name}}&#10;File: {{avatar}}">
+                    <img alt="{{char_name}}" src="{{char_thumbnail}}">
+                </div>
+                <div class="recentChatInfo">
+                    <div class="chatNameContainer">
+                        <div class="chatName" title="{{file_name}}">
+                            <strong class="characterName">{{char_name}}</strong>
+                            <span>&ndash;</span>
+                            <span>{{chat_name}}</span>
+                        </div>
+                        <small class="chatDate" title="{{date_long}}">{{date_short}}</small>
+                        <div class="chatActions">
+                            <button class="menu_button menu_button_icon renameChat" data-i18n="[title]Rename chat"
+                                    title="Rename chat">
+                                <i class="fa-solid fa-pen-to-square fa-fw"></i>
+                            </button>
+                            <button class="menu_button menu_button_icon deleteChat" data-i18n="[title]Delete chat"
+                                    title="Delete chat">
+                                <i class="fa-solid fa-trash fa-fw"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chatMessageContainer">
+                        <div class="chatMessage" title="{{mes}}">
+                            {{mes}}
+                        </div>
+                        <div class="chatStats">
+                            <div class="counterBlock">
+                                <i class="fa-solid fa-comment fa-xs"></i>
+                                <small>{{chat_items}}</small>
+                            </div>
+                            <small class="fileSize">{{file_size}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/with}}
+            {{/each}}
+            {{#if more}}
+            <button class="menu_button menu_button_icon showMoreChats">
+                <small class="fa-solid fa-chevron-down fa-fw fa-1x"></small>
+            </button>
+            {{/if}}
+        </div>
+    </div>
+</div>

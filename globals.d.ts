@@ -6,6 +6,15 @@ interface SillyTavernGlobal {
     getContext(): ISillyTavernContext;
 
     [key: string]: any; // Allow for other properties
+    libs: {
+        lodash: any;
+        localforage: any;
+        Fuse: any;
+        DOMPurify: any;
+        Handlebars: any;
+        moment: any;
+        showdown: any;
+    };
 }
 
 declare global {

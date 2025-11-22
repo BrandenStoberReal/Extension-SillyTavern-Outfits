@@ -1,3 +1,27 @@
-.hello-world-message {
-    color: blue;
+/* Basic styling for the Outfit Extension */
+
+#outfit-extension-settings {
+    padding: 15px;
+    border-top: 1px solid #4a4a4a;
 }
+
+#outfit-extension-settings .inline-help {
+    margin-bottom: 15px;
+    color: #ccc;
+}
+
+#outfit-extension-settings .checkbox-nested {
+    margin-bottom: 10px;
+}
+
+#outfit-extension-settings label.checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#outfit-extension-settings label.checkbox input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Add any other outfit extension specific styles here */
