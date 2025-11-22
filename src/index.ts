@@ -1,5 +1,8 @@
 import './css/style.css';
 
+// Define extension name as a global constant
+const EXTENSION_NAME = 'Outfit Extension';
+
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
     try {
@@ -139,7 +142,7 @@ const registerSlashCommands = () => {
 
 // Register settings panel in the settings UI
 const registerSettingsPanel = () => {
-    // Create settings HTML
+    // Create settings HTML content
     const settingsHtml = `
         <div id="outfit-extension-settings" style="display: none;">
             <div class="inline-help">
@@ -162,7 +165,7 @@ const registerSettingsPanel = () => {
         </div>
     `;
 
-    // Add settings panel to the DOM
+    // Add settings panel to the DOM using the proper SillyTavern extension registration
     const settingsContainer = document.getElementById('settingsDiv');
     if (settingsContainer) {
         settingsContainer.insertAdjacentHTML('beforeend', settingsHtml);
@@ -197,16 +200,51 @@ const registerSettingsPanel = () => {
         }
 
         // Add the settings panel to the main settings navigation
-        const navContainer = document.getElementById('nav-settings');
+        // In newer versions of SillyTavern, we need to use the proper extension registration
+        const navContainer = document.getElementById('settingsMenuExtensionItems');
         if (navContainer) {
+            // If the extension items container exists, add our tab there
             const linkElement = document.createElement('A') as HTMLAnchorElement;
             linkElement.setAttribute('data-target', 'outfit-extension-settings');
-            linkElement.textContent = 'Outfit Extension';
+            linkElement.textContent = EXTENSION_NAME;
             linkElement.href = 'javascript:void(0)';
             navContainer.appendChild(linkElement);
+        } else {
+            // Fallback: Try to add to the main settings menu if the extensions section doesn't exist
+            const mainNavContainer = document.querySelector('#nav-settings') as HTMLElement;
+            if (mainNavContainer) {
+                // Create a wrapper for extension navigation items if it doesn't exist
+                let extensionNavContainer = document.querySelector('#extension-nav-items') as HTMLElement;
+                if (!extensionNavContainer) {
+                    extensionNavContainer = document.createElement('div');
+                    extensionNavContainer.id = 'extension-nav-items';
+                    extensionNavContainer.classList.add('settingsGroup');
+                    mainNavContainer.appendChild(extensionNavContainer);
+                }
+
+                const linkElement = document.createElement('A') as HTMLAnchorElement;
+                linkElement.setAttribute('data-target', 'outfit-extension-settings');
+                linkElement.textContent = EXTENSION_NAME;
+                linkElement.href = 'javascript:void(0)';
+                extensionNavContainer.appendChild(linkElement);
+            } else {
+                // For older versions, try to find the general nav container
+                const generalNavContainer = document.querySelector('#settingsMenu .settingsGroup') as HTMLElement;
+                if (generalNavContainer) {
+                    const linkElement = document.createElement('A') as HTMLAnchorElement;
+                    linkElement.setAttribute('data-target', 'outfit-extension-settings');
+                    linkElement.textContent = EXTENSION_NAME;
+                    linkElement.href = 'javascript:void(0)';
+                    generalNavContainer.appendChild(linkElement);
+                } else {
+                    console.warn(`Could not find settings navigation container for ${EXTENSION_NAME}`);
+                }
+            }
         }
 
         console.log('Outfit Extension: Settings panel registered');
+    } else {
+        console.error('Could not find settingsDiv container for Outfit Extension');
     }
 };
 
