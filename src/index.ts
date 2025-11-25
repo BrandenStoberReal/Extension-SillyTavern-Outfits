@@ -38,9 +38,8 @@ enum HttpContentType {
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
     const context = SillyTavern.getContext();
-    const {toastr} = context;
 
-    toastr.info('Registering with ValueTracker plugin...');
+    window.toastr.info('Registering with ValueTracker plugin...');
     try {
         // Get the SillyTavern context to access authentication headers
         const headers = {
@@ -66,30 +65,30 @@ const registerWithValueTracker = async () => {
             // If not JSON, get text content for debugging
             const textResult = await response.text();
             console.warn('Non-JSON response received:', textResult);
-            toastr.warning('Non-JSON response received from ValueTracker. See console for details.');
+            window.toastr.warning('Non-JSON response received from ValueTracker. See console for details.');
             result = {message: textResult, status: response.status};
         }
 
         if (response.status === 404) {
             console.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?', result);
-            toastr.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?');
+            window.toastr.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?');
             return;
         } else if (response.status === 403) {
             console.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:', result);
-            toastr.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled.');
+            window.toastr.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled.');
             return;
         } else if (!response.ok) {
             console.error('Failed to register with ValueTracker:', result);
-            toastr.error('Failed to register with ValueTracker. See console for details.');
+            window.toastr.error('Failed to register with ValueTracker. See console for details.');
             return;
         }
 
         console.log('Successfully registered with ValueTracker:', result.message);
-        toastr.success('Successfully registered with ValueTracker.');
+        window.toastr.success('Successfully registered with ValueTracker.');
 
     } catch (error) {
         console.error('Error registering with ValueTracker:', error);
-        toastr.error('Error registering with ValueTracker. See console for details.');
+        window.toastr.error('Error registering with ValueTracker. See console for details.');
     }
 };
 
@@ -236,8 +235,14 @@ function registerSettingsPanel() {
 
 // Actual execution START
 
-initializeExtension();
-registerSlashCommands();
-registerSettingsPanel();
+const waitForToastr = setInterval(() => {
+    if (window.toastr) {
+        clearInterval(waitForToastr);
 
-console.log(`${EXTENSION_NAME}: Initialization complete`);
+        initializeExtension();
+        registerSlashCommands();
+        registerSettingsPanel();
+
+        console.log(`${EXTENSION_NAME}: Initialization complete`);
+    }
+}, 100);
