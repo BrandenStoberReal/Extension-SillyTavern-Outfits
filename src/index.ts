@@ -37,6 +37,15 @@ enum HttpContentType {
 
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
+    console.log('Inside registerWithValueTracker');
+    console.log('Type of window.toastr:', typeof window.toastr);
+    console.log('Value of window.toastr:', window.toastr);
+
+    if (!window.toastr) {
+        console.error('window.toastr is not available inside registerWithValueTracker');
+        return; // Exit if toastr is not available
+    }
+
     const context = SillyTavern.getContext();
 
     window.toastr.info('Registering with ValueTracker plugin...');
@@ -128,6 +137,8 @@ const initializeExtension = async () => {
         // Listen for the app ready event
         eventSource.on(event_types.APP_READY, () => {
             console.log('Outfit Extension: App is ready');
+            console.log('Type of window.toastr in APP_READY:', typeof window.toastr);
+            console.log('Value of window.toastr in APP_READY:', window.toastr);
             // Always register with ValueTracker when the app is ready
             registerWithValueTracker();
             console.log('Outfit Extension: Initialized');
