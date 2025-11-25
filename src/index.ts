@@ -1,5 +1,6 @@
 import './css/style.css';
 
+
 // Define extension name as a global constant
 const EXTENSION_NAME = 'Outfit Extension';
 
@@ -12,7 +13,7 @@ const MODULE_NAME = 'outfit_extension';
 
 // Default settings for the extension
 const defaultSettings = Object.freeze({
-    debugMode: false
+    debugMode: false,
 });
 
 // Define API enums
@@ -36,9 +37,12 @@ enum HttpContentType {
 
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
+    const context = SillyTavern.getContext();
+    const {toastr} = context;
+
+    toastr.info('Registering with ValueTracker plugin...');
     try {
         // Get the SillyTavern context to access authentication headers
-        const context = SillyTavern.getContext();
         const headers = {
             ...context.getRequestHeaders(),  // Include standard ST authentication headers
             'Content-Type': HttpContentType.JSON,
@@ -62,23 +66,30 @@ const registerWithValueTracker = async () => {
             // If not JSON, get text content for debugging
             const textResult = await response.text();
             console.warn('Non-JSON response received:', textResult);
+            toastr.warning('Non-JSON response received from ValueTracker. See console for details.');
             result = {message: textResult, status: response.status};
         }
 
         if (response.status === 404) {
-            console.error("Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?", result);
+            console.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?', result);
+            toastr.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?');
             return;
         } else if (response.status === 403) {
-            console.error("Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:", result);
+            console.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:', result);
+            toastr.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled.');
             return;
         } else if (!response.ok) {
             console.error('Failed to register with ValueTracker:', result);
+            toastr.error('Failed to register with ValueTracker. See console for details.');
             return;
         }
 
         console.log('Successfully registered with ValueTracker:', result.message);
+        toastr.success('Successfully registered with ValueTracker.');
+
     } catch (error) {
         console.error('Error registering with ValueTracker:', error);
+        toastr.error('Error registering with ValueTracker. See console for details.');
     }
 };
 
@@ -169,7 +180,7 @@ const registerSlashCommands = () => {
                         </ul>
                     </div>
                 `,
-            })
+            }),
         );
 
         console.log('Outfit Extension: Slash commands registered');
@@ -205,10 +216,10 @@ function registerSettingsPanel() {
             context.eventSource.on(context.event_types.APP_READY, function () {
                 // Add settings panel to the extensions settings container using jQuery
                 if (typeof $ !== 'undefined') {
-                    $("#extensions_settings").append(settingsHtml);
+                    $('#extensions_settings').append(settingsHtml);
 
                     // Set up event handler for the debug checkbox using jQuery
-                    $("#outfit-extension-debug").on("input", function (this: HTMLElement) {
+                    $('#outfit-extension-debug').on('input', function (this: HTMLElement) {
                         const settings = getSettings();
                         settings.debugMode = $(this).prop('checked');
                         SillyTavern.getContext().saveSettingsDebounced();

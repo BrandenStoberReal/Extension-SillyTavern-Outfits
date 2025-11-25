@@ -36,7 +36,7 @@ interface JQueryStatic {
 
     (element: HTMLElement): JQuery;
 
-    (object: {}): JQuery;
+    (object: object): JQuery;
 
     (callback: (jQueryAlias?: JQueryStatic) => void): any;
 }
