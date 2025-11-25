@@ -136,9 +136,6 @@ const initializeExtension = async () => {
 
         // Listen for the app ready event
         eventSource.on(event_types.APP_READY, () => {
-            console.log('Outfit Extension: App is ready');
-            console.log('Type of window.toastr in APP_READY:', typeof window.toastr);
-            console.log('Value of window.toastr in APP_READY:', window.toastr);
             // Always register with ValueTracker when the app is ready
             registerWithValueTracker();
             console.log('Outfit Extension: Initialized');
@@ -172,20 +169,20 @@ const registerSlashCommands = () => {
             (globalThis as any).SlashCommand.fromProps({
                 name: 'outfit',
                 callback: (namedArgs: any, unnamedArgs: any) => {
-                    return `Outfit Extension is active. Command: ${unnamedArgs.toString()}`;
+                    return `${EXTENSION_NAME} is active. Command: ${unnamedArgs.toString()}`;
                 },
                 aliases: ['o'],
-                returns: 'outfit extension status',
+                returns: `${EXTENSION_NAME.toLowerCase()} status`,
                 helpString: `
                     <div>
-                        Outfit Extension command for testing purposes.
+                        ${EXTENSION_NAME.toLowerCase()} command for testing purposes.
                     </div>
                     <div>
                         <strong>Example:</strong>
                         <ul>
                             <li>
                                 <pre><code class="language-stscript">/outfit status</code></pre>
-                                returns the current status of the outfit extension
+                                returns the current status of the ${EXTENSION_NAME.toLowerCase()}
                             </li>
                         </ul>
                     </div>
@@ -193,7 +190,7 @@ const registerSlashCommands = () => {
             }),
         );
 
-        console.log('Outfit Extension: Slash commands registered');
+        console.log(`${EXTENSION_NAME}: Slash commands registered`);
     }
 };
 
@@ -204,7 +201,7 @@ function registerSettingsPanel() {
         <div class="outfit-extension-settings">
             <div class="inline-drawer">
                 <div class="inline-drawer-toggle inline-drawer-header">
-                    <b>Outfit Extension Settings</b>
+                    <b>${EXTENSION_NAME} Settings</b>
                     <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
                 </div>
                 <div class="inline-drawer-content">
@@ -235,9 +232,9 @@ function registerSettingsPanel() {
                         SillyTavern.getContext().saveSettingsDebounced();
                     });
 
-                    console.log('Outfit Extension: Settings panel registered');
+                    console.log(`${EXTENSION_NAME}: Settings panel registered`);
                 } else {
-                    console.error('jQuery not available, cannot register settings panel');
+                    console.error(`${EXTENSION_NAME}: jQuery not available, cannot register settings panel`);
                 }
             });
         }
