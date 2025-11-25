@@ -45,7 +45,4 @@ declare global {
     const SillyTavern: SillyTavernGlobal;
 
     // Add global type declarations here
-    enum HttpHeader {
-        ContentType = 'Content-Type',
-    }
 }
