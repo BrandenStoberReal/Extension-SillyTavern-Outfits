@@ -6,7 +6,7 @@
  * Test file to validate the logging framework
  */
 
-import {logDebug, logError, Logger, logInfo, LogLevel, logWarn} from '../utils/logger';
+import { logDebug, logError, Logger, logInfo, LogLevel, logWarn } from '../utils/logger';
 
 // Test the default logger instance
 console.log('Testing default logger...');
@@ -33,7 +33,7 @@ customLogger.error('Custom logger error message');
 // Test log level changes
 console.log('\nTesting different log levels...');
 
-const testLogger = new Logger({prefix: 'LevelTest', level: LogLevel.WARN});
+const testLogger = new Logger({ prefix: 'LevelTest', level: LogLevel.WARN });
 testLogger.debug('This debug should NOT appear');
 testLogger.info('This info should NOT appear');
 testLogger.warn('This warning SHOULD appear');

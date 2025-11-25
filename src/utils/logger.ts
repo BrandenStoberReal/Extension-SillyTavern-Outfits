@@ -84,7 +84,7 @@ export class Logger {
 }
 
 // Default instance of the logger
-export const logger = new Logger({prefix: 'OutfitsExtension'});
+export const logger = new Logger({ prefix: 'OutfitsExtension' });
 
 // Convenience functions that use the default logger instance
 export const logDebug = (message: any, ...optionalParams: any[]): void => logger.debug(message, ...optionalParams);

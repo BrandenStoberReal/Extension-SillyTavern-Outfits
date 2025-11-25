@@ -1,5 +1,5 @@
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import { fileURLToPath } from 'node:url';
 import TerserPlugin from 'terser-webpack-plugin';
 
 const __dirname = import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url));
@@ -26,7 +26,7 @@ export default {
             },
             {
                 test: /\.html$/,
-                use: {loader: 'html-loader'},
+                use: { loader: 'html-loader' },
             },
         ],
     },
