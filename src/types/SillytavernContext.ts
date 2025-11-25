@@ -1,7 +1,6 @@
 import * as SillyTavern from './SillyTavern';
 
 export interface ISillyTavernContext {
-    toastr: Toastr;
     accountStorage: SillyTavern.AccountStorage;
     chat: SillyTavern.ChatMessage[];
     characters: SillyTavern.Character[];
