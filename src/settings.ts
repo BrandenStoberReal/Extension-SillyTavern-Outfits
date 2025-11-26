@@ -42,6 +42,7 @@ export class SettingsManager<T extends SettingsSchema> {
                     AddCheckbox(container, {
                         id: `${MODULE_NAME}-${String(key)}`,
                         label: definition.label,
+                        labelClass: 'normal',
                         description: definition.description,
                         value: currentValue,
                     }, (value) => this.set(key as keyof T, value));
@@ -50,6 +51,7 @@ export class SettingsManager<T extends SettingsSchema> {
                     AddTextbox(container, {
                         id: `${MODULE_NAME}-${String(key)}`,
                         label: definition.label,
+                        labelClass: 'normal',
                         description: definition.description,
                         value: currentValue,
                     }, (value) => this.set(key as keyof T, value));

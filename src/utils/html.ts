@@ -6,6 +6,7 @@ export interface BaseOptions {
     description?: string;
     value?: any;
     class?: string;
+    labelClass?: string;
     attributes?: { [key: string]: string };
     includeDescription?: boolean;
 }
@@ -42,10 +43,13 @@ export function createWrapper(options: BaseOptions): HTMLElement {
     return wrapper;
 }
 
-export function createLabel(forId: string, text: string): HTMLLabelElement {
+export function createLabel(forId: string, text: string, labelClass?: string): HTMLLabelElement {
     const label = document.createElement('label');
     label.htmlFor = forId;
     label.textContent = text;
+    if (labelClass) {
+        label.classList.add(...labelClass.split(' '));
+    }
     return label;
 }
 
@@ -84,7 +88,7 @@ export function AddCheckbox(
     labelAndInput.classList.add(`st-outfits-option-label-input`);
 
     if (options.label) {
-        const label = createLabel(id, options.label);
+        const label = createLabel(id, options.label, options.labelClass);
         labelAndInput.appendChild(checkbox);
         labelAndInput.appendChild(label);
     } else {
@@ -112,7 +116,7 @@ export function AddTextbox(
     const id = options.id ?? `st-outfits-textbox-${Math.random().toString(36).substring(2)}`;
 
     if (options.label) {
-        const label = createLabel(id, options.label);
+        const label = createLabel(id, options.label, options.labelClass);
         wrapper.appendChild(label);
     }
 
@@ -163,6 +167,11 @@ export function AddButton(
     button.addEventListener('click', (event) => {
         callback(event);
     });
+
+    if (options.label) {
+        const label = createLabel(button.id, options.label, options.labelClass);
+        wrapper.appendChild(label);
+    }
 
     wrapper.appendChild(button);
 
