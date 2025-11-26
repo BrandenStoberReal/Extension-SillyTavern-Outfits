@@ -85,7 +85,7 @@ export function AddCheckbox(
 
     if (options.label) {
         const label = createLabel(id, options.label);
-        label.appendChild(checkbox);
+        labelAndInput.appendChild(checkbox);
         labelAndInput.appendChild(label);
     } else {
         labelAndInput.appendChild(checkbox);
