@@ -1,4 +1,3 @@
-
 export interface PopupOptions {
     okButton?: string | boolean | null;
     cancelButton?: string | boolean | null;

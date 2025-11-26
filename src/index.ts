@@ -162,7 +162,6 @@ function registerSettingsPanel() {
                         settingsManager.render(settingsContent);
                     }
 
-
                     logger.info(`${EXTENSION_NAME}: Settings panel registered`);
                 } else {
                     logger.error(`${EXTENSION_NAME}: jQuery not available, cannot register settings panel`);

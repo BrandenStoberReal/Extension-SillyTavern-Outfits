@@ -3,9 +3,6 @@ import {ISillyTavernContext} from './src/types/SillytavernContext.ts';
 export {};
 
 interface SillyTavernGlobal {
-    getContext(): ISillyTavernContext;
-
-    [key: string]: any; // Allow for other properties
     libs: {
         lodash: any;
         localforage: any;
@@ -15,6 +12,10 @@ interface SillyTavernGlobal {
         moment: any;
         showdown: any;
     };
+
+    getContext(): ISillyTavernContext;
+
+    [key: string]: any; // Allow for other properties
 }
 
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {

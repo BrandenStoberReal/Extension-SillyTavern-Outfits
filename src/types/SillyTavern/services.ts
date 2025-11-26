@@ -1,6 +1,6 @@
-import { ChatCompletionMessage } from './chat-completion-message';
-import { StreamResponse } from './streaming';
-import { InstructSettings } from './instruct';
+import {ChatCompletionMessage} from './chat-completion-message';
+import {StreamResponse} from './streaming';
+import {InstructSettings} from './instruct';
 
 export interface ChatCompletionPayload {
     stream?: boolean;
