@@ -1,4 +1,4 @@
-import {HtmlUtils} from './utils/html';
+import {AddCheckbox, AddTextbox} from './utils/html';
 import {MODULE_NAME} from './constants';
 
 export type SettingType = 'checkbox' | 'textbox' | 'range';
@@ -39,7 +39,7 @@ export class SettingsManager<T extends SettingsSchema> {
 
             switch (definition.type) {
                 case 'checkbox':
-                    HtmlUtils.AddCheckbox(container, {
+                    AddCheckbox(container, {
                         id: `${MODULE_NAME}-${String(key)}`,
                         label: definition.label,
                         description: definition.description,
@@ -47,7 +47,7 @@ export class SettingsManager<T extends SettingsSchema> {
                     }, (value) => this.set(key as keyof T, value));
                     break;
                 case 'textbox':
-                    HtmlUtils.AddTextbox(container, {
+                    AddTextbox(container, {
                         id: `${MODULE_NAME}-${String(key)}`,
                         label: definition.label,
                         description: definition.description,

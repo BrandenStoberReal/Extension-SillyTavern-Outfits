@@ -1,47 +1,101 @@
-/*
- * Copyright (c) 2025.
- */
-
 /**
- * Test file to validate the logging framework
+ * @jest-environment node
  */
 
-import { logDebug, logError, Logger, logInfo, LogLevel, logWarn } from '../utils/logger';
+import {logDebug, logError, Logger, logInfo, LogLevel, logWarn} from '../utils/logger';
 
-// Test the default logger instance
-console.log('Testing default logger...');
+describe('Logger', () => {
+    let consoleLogSpy: jest.SpyInstance;
+    let consoleInfoSpy: jest.SpyInstance;
+    let consoleWarnSpy: jest.SpyInstance;
+    let consoleErrorSpy: jest.SpyInstance;
 
-logDebug('This is a debug message');
-logInfo('This is an info message');
-logWarn('This is a warning message');
-logError('This is an error message');
+    beforeEach(() => {
+        consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {
+        });
+        consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => {
+        });
+        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {
+        });
+        consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {
+        });
+    });
 
-// Test creating a custom logger instance
-console.log('\nTesting custom logger instance...');
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
 
-const customLogger = new Logger({
-    prefix: 'TestLogger',
-    level: LogLevel.DEBUG,
-    timestamp: true,
+    describe('Default Logger', () => {
+        it('should log debug messages', () => {
+            logDebug('test debug');
+            expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('test debug'));
+        });
+
+        it('should log info messages', () => {
+            logInfo('test info');
+            expect(consoleInfoSpy).toHaveBeenCalledWith(expect.stringContaining('test info'));
+        });
+
+        it('should log warn messages', () => {
+            logWarn('test warn');
+            expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('test warn'));
+        });
+
+        it('should log error messages', () => {
+            logError('test error');
+            expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('test error'));
+        });
+    });
+
+    describe('Custom Logger', () => {
+        const customLogger = new Logger({
+            prefix: 'TestLogger',
+            level: LogLevel.DEBUG,
+            timestamp: true,
+        });
+
+        it('should log debug messages', () => {
+            customLogger.debug('test debug');
+            expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('[TestLogger]'), expect.stringContaining('test debug'));
+        });
+
+        it('should log info messages', () => {
+            customLogger.info('test info');
+            expect(consoleInfoSpy).toHaveBeenCalledWith(expect.stringContaining('[TestLogger]'), expect.stringContaining('test info'));
+        });
+
+        it('should log warn messages', () => {
+            customLogger.warn('test warn');
+            expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('[TestLogger]'), expect.stringContaining('test warn'));
+        });
+
+        it('should log error messages', () => {
+            customLogger.error('test error');
+            expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('[TestLogger]'), expect.stringContaining('test error'));
+        });
+    });
+
+    describe('Log Levels', () => {
+        const testLogger = new Logger({prefix: 'LevelTest', level: LogLevel.WARN});
+
+        it('should not log messages below the current log level', () => {
+            testLogger.debug('This debug should NOT appear');
+            testLogger.info('This info should NOT appear');
+            expect(consoleLogSpy).not.toHaveBeenCalled();
+            expect(consoleInfoSpy).not.toHaveBeenCalled();
+        });
+
+        it('should log messages at or above the current log level', () => {
+            testLogger.warn('This warning SHOULD appear');
+            testLogger.error('This error SHOULD appear');
+            expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('This warning SHOULD appear'));
+            expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('This error SHOULD appear'));
+        });
+
+        it('should change log level at runtime', () => {
+            testLogger.setLevel(LogLevel.DEBUG);
+            testLogger.debug('This debug SHOULD now appear');
+            expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('This debug SHOULD now appear'));
+        });
+    });
 });
-
-customLogger.debug('Custom logger debug message');
-customLogger.info('Custom logger info message');
-customLogger.warn('Custom logger warning message');
-customLogger.error('Custom logger error message');
-
-// Test log level changes
-console.log('\nTesting different log levels...');
-
-const testLogger = new Logger({ prefix: 'LevelTest', level: LogLevel.WARN });
-testLogger.debug('This debug should NOT appear');
-testLogger.info('This info should NOT appear');
-testLogger.warn('This warning SHOULD appear');
-testLogger.error('This error SHOULD appear');
-
-// Change level at runtime
-console.log('\nChanging level at runtime...');
-testLogger.setLevel(LogLevel.DEBUG);
-testLogger.debug('This debug SHOULD now appear after level change');
-
-console.log('\nLogging framework tests completed successfully!');

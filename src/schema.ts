@@ -1,4 +1,4 @@
-import {SettingsSchema} from "./settings";
+import {SettingsSchema} from './settings';
 
 // Default settings for the extension
 export const schema = Object.freeze({

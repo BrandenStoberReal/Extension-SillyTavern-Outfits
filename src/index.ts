@@ -1,9 +1,9 @@
 import './css/style.css';
-import {logger} from "./utils/logger";
+import {logger} from './utils/logger';
 import toastr from './utils/toastr';
-import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod,} from "./constants";
-import {SettingsManager} from "./settings";
-import {schema} from "./schema";
+import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod} from './constants';
+import {SettingsManager} from './settings';
+import {schema} from './schema';
 
 const settingsManager = new SettingsManager(schema);
 
@@ -142,7 +142,7 @@ function registerSettingsPanel() {
                     <b>${EXTENSION_NAME} Settings</b>
                     <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
                 </div>
-                <div id="${EXTENSION_ID}-settings-content" class="inline-drawer-content">
+                <div id="st-outfits-settings-content" class="inline-drawer-content">
                 </div>
             </div>
         </div>
@@ -157,7 +157,7 @@ function registerSettingsPanel() {
                 // Add settings panel to the extensions settings container using jQuery
                 if (typeof $ !== 'undefined') {
                     $('#extensions_settings').append(settingsHtml);
-                    const settingsContent = document.getElementById(`${EXTENSION_ID}-settings-content`);
+                    const settingsContent = document.getElementById(`st-outfits-settings-content`);
                     if (settingsContent) {
                         settingsManager.render(settingsContent);
                     }

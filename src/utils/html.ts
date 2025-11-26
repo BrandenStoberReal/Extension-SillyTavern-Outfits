@@ -1,5 +1,4 @@
 // src/utils/html.ts
-import {EXTENSION_ID} from "../constants";
 
 export interface BaseOptions {
     id?: string;
@@ -8,6 +7,7 @@ export interface BaseOptions {
     value?: any;
     class?: string;
     attributes?: { [key: string]: string };
+    includeDescription?: boolean;
 }
 
 export interface CheckboxOptions extends BaseOptions {
@@ -30,147 +30,147 @@ export interface ButtonOptions extends BaseOptions {
     text: string;
 }
 
-export namespace HtmlUtils {
-    function createWrapper(options: BaseOptions): HTMLElement {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add(`${EXTENSION_ID}-option`);
-        if (options.class) {
-            wrapper.classList.add(...options.class.split(' '));
-        }
-        if (options.id) {
-            wrapper.id = `${options.id}-wrapper`;
-        }
-        return wrapper;
+export function createWrapper(options: BaseOptions): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add(`st-outfits-option`);
+    if (options.class) {
+        wrapper.classList.add(...options.class.split(' '));
     }
-
-    function createLabel(forId: string, text: string): HTMLLabelElement {
-        const label = document.createElement('label');
-        label.htmlFor = forId;
-        label.textContent = text;
-        return label;
+    if (options.id) {
+        wrapper.id = `${options.id}-wrapper`;
     }
+    return wrapper;
+}
 
-    function createDescription(text: string): HTMLElement {
-        const description = document.createElement('p');
-        description.classList.add(`${EXTENSION_ID}-option-description`);
-        description.textContent = text;
-        return description;
-    }
+export function createLabel(forId: string, text: string): HTMLLabelElement {
+    const label = document.createElement('label');
+    label.htmlFor = forId;
+    label.textContent = text;
+    return label;
+}
 
-    export function AddCheckbox(
-        parent: HTMLElement,
-        options: CheckboxOptions,
-        callback: (value: boolean) => void
-    ): HTMLInputElement {
-        const wrapper = createWrapper(options);
+export function createDescription(text: string): HTMLElement {
+    const description = document.createElement('p');
+    description.classList.add(`st-outfits-option-description`);
+    description.textContent = text;
+    return description;
+}
 
-        const id = options.id ?? `${EXTENSION_ID}-checkbox-${Math.random().toString(36).substring(2)}`;
+export function AddCheckbox(
+    parent: HTMLElement,
+    options: CheckboxOptions,
+    callback: (value: boolean) => void,
+): HTMLInputElement {
+    const wrapper = createWrapper(options);
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = id;
-        checkbox.checked = options.value ?? false;
+    const id = options.id ?? `st-outfits-checkbox-${Math.random().toString(36).substring(2)}`;
 
-        if (options.attributes) {
-            Object.entries(options.attributes).forEach(([key, value]) => {
-                checkbox.setAttribute(key, value);
-            });
-        }
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = id;
+    checkbox.checked = options.value ?? false;
 
-        checkbox.addEventListener('change', () => {
-            callback(checkbox.checked);
+    if (options.attributes) {
+        Object.entries(options.attributes).forEach(([key, value]) => {
+            checkbox.setAttribute(key, value);
         });
+    }
 
-        const labelAndInput = document.createElement('div');
-        labelAndInput.classList.add(`${EXTENSION_ID}-option-label-input`);
+    checkbox.addEventListener('change', () => {
+        callback(checkbox.checked);
+    });
 
-        if (options.label) {
-            const label = createLabel(id, options.label);
-            labelAndInput.appendChild(label);
-        }
+    const labelAndInput = document.createElement('div');
+    labelAndInput.classList.add(`st-outfits-option-label-input`);
+
+    if (options.label) {
+        const label = createLabel(id, options.label);
+        label.appendChild(checkbox);
+        labelAndInput.appendChild(label);
+    } else {
         labelAndInput.appendChild(checkbox);
-
-        wrapper.appendChild(labelAndInput);
-
-        if (options.description) {
-            const description = createDescription(options.description);
-            wrapper.appendChild(description);
-        }
-
-        parent.appendChild(wrapper);
-        return checkbox;
     }
 
-    export function AddTextbox(
-        parent: HTMLElement,
-        options: TextboxOptions,
-        callback: (value: string) => void
-    ): HTMLInputElement {
-        const wrapper = createWrapper(options);
+    wrapper.appendChild(labelAndInput);
 
-        const id = options.id ?? `${EXTENSION_ID}-textbox-${Math.random().toString(36).substring(2)}`;
+    if (options.description && (options.includeDescription ?? true)) {
+        const description = createDescription(options.description);
+        wrapper.appendChild(description);
+    }
 
-        if (options.label) {
-            const label = createLabel(id, options.label);
-            wrapper.appendChild(label);
-        }
+    parent.appendChild(wrapper);
+    return checkbox;
+}
 
-        const textbox = document.createElement('input');
-        textbox.type = 'text';
-        textbox.id = id;
-        textbox.value = options.value ?? '';
-        textbox.placeholder = options.placeholder ?? '';
+export function AddTextbox(
+    parent: HTMLElement,
+    options: TextboxOptions,
+    callback: (value: string) => void,
+): HTMLInputElement {
+    const wrapper = createWrapper(options);
 
-        if (options.attributes) {
-            Object.entries(options.attributes).forEach(([key, value]) => {
-                textbox.setAttribute(key, value);
-            });
-        }
+    const id = options.id ?? `st-outfits-textbox-${Math.random().toString(36).substring(2)}`;
 
-        textbox.addEventListener('input', () => {
-            callback(textbox.value);
+    if (options.label) {
+        const label = createLabel(id, options.label);
+        wrapper.appendChild(label);
+    }
+
+    const textbox = document.createElement('input');
+    textbox.type = 'text';
+    textbox.id = id;
+    textbox.value = options.value ?? '';
+    textbox.placeholder = options.placeholder ?? '';
+
+    if (options.attributes) {
+        Object.entries(options.attributes).forEach(([key, value]) => {
+            textbox.setAttribute(key, value);
         });
-
-        wrapper.appendChild(textbox);
-
-        if (options.description) {
-            const description = createDescription(options.description);
-            wrapper.appendChild(description);
-        }
-
-        parent.appendChild(wrapper);
-        return textbox;
     }
 
-    export function AddButton(
-        parent: HTMLElement,
-        options: ButtonOptions,
-        callback: (event: MouseEvent) => void
-    ): HTMLButtonElement {
-        const wrapper = createWrapper(options);
+    textbox.addEventListener('input', () => {
+        callback(textbox.value);
+    });
 
-        const button = document.createElement('button');
-        button.id = options.id ?? `${EXTENSION_ID}-button-${Math.random().toString(36).substring(2)}`;
-        button.textContent = options.text;
+    wrapper.appendChild(textbox);
 
-        if (options.attributes) {
-            Object.entries(options.attributes).forEach(([key, value]) => {
-                button.setAttribute(key, value);
-            });
-        }
+    if (options.description && (options.includeDescription ?? true)) {
+        const description = createDescription(options.description);
+        wrapper.appendChild(description);
+    }
 
-        button.addEventListener('click', (event) => {
-            callback(event);
+    parent.appendChild(wrapper);
+    return textbox;
+}
+
+export function AddButton(
+    parent: HTMLElement,
+    options: ButtonOptions,
+    callback: (event: MouseEvent) => void,
+): HTMLButtonElement {
+    const wrapper = createWrapper(options);
+
+    const button = document.createElement('button');
+    button.id = options.id ?? `st-outfits-button-${Math.random().toString(36).substring(2)}`;
+    button.textContent = options.text;
+
+    if (options.attributes) {
+        Object.entries(options.attributes).forEach(([key, value]) => {
+            button.setAttribute(key, value);
         });
-
-        wrapper.appendChild(button);
-
-        if (options.description) {
-            const description = createDescription(options.description);
-            wrapper.appendChild(description);
-        }
-
-        parent.appendChild(wrapper);
-        return button;
     }
+
+    button.addEventListener('click', (event) => {
+        callback(event);
+    });
+
+    wrapper.appendChild(button);
+
+    if (options.description && (options.includeDescription ?? true)) {
+        const description = createDescription(options.description);
+        wrapper.appendChild(description);
+    }
+
+    parent.appendChild(wrapper);
+    return button;
 }
