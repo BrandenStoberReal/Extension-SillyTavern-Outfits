@@ -20,7 +20,7 @@ interface SillyTavernGlobal {
 interface JQuery<TElement = HTMLElement> extends Iterable<TElement> {
     length: number;
 
-    on(events: string, handler: (eventObject: JQuery.Event<TElement>) => any): this;
+    on(events: string, handler: (eventObject: JQuery.Event) => any): this;
 
     prop(name: string): any | undefined;
 
@@ -43,10 +43,6 @@ interface JQueryStatic {
 
 declare global {
     const SillyTavern: SillyTavernGlobal;
-    const $: JQueryStatic;
 
     // Add global type declarations here
-    enum HttpHeader {
-        ContentType = 'Content-Type',
-    }
 }
