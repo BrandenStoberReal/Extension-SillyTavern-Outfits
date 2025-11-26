@@ -35,6 +35,12 @@
 .st-outfits-option-label-input {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
+}
+
+.st-outfits-option input[type="checkbox"] {
+    margin: 0;
+    align-self: center;
 }
 
 .st-outfits-option label {
