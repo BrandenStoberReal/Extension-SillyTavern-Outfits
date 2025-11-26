@@ -1,15 +1,6 @@
 import './css/style.css';
-
-
-// Define extension name as a global constant
-const EXTENSION_NAME = 'Outfit Extension';
-
-// Define API constants
-const API_ROOT_URL = '/api/plugins/valuetracker';
-const EXTENSION_ID = 'extension-valuetracker-outfits';
-
-// Define module name for settings
-const MODULE_NAME = 'outfit_extension';
+import {logger} from "./utils/logger";
+import {API_ROOT_URL, EXTENSION_ID, EXTENSION_NAME, MODULE_NAME} from "./constants";
 
 // Default settings for the extension
 const defaultSettings = Object.freeze({
@@ -37,12 +28,8 @@ enum HttpContentType {
 
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
-    console.log('Inside registerWithValueTracker');
-    console.log('Type of window.toastr:', typeof window.toastr);
-    console.log('Value of window.toastr:', window.toastr);
-
     if (!window.toastr) {
-        console.error('window.toastr is not available inside registerWithValueTracker');
+        logger.error('window.toastr is not available inside registerWithValueTracker');
         return; // Exit if toastr is not available
     }
 
@@ -73,31 +60,31 @@ const registerWithValueTracker = async () => {
         } else {
             // If not JSON, get text content for debugging
             const textResult = await response.text();
-            console.warn('Non-JSON response received:', textResult);
-            window.toastr.warning('Non-JSON response received from ValueTracker. See console for details.');
+            logger.warn('Non-JSON response received:', textResult);
+            window.toastr.warning('Non-JSON response received from ValueTracker. See logger for details.');
             result = {message: textResult, status: response.status};
         }
 
         if (response.status === 404) {
-            console.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?', result);
+            logger.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?', result);
             window.toastr.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?');
             return;
         } else if (response.status === 403) {
-            console.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:', result);
+            logger.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:', result);
             window.toastr.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled.');
             return;
         } else if (!response.ok) {
-            console.error('Failed to register with ValueTracker:', result);
-            window.toastr.error('Failed to register with ValueTracker. See console for details.');
+            logger.error('Failed to register with ValueTracker:', result);
+            window.toastr.error('Failed to register with ValueTracker. See logger for details.');
             return;
         }
 
-        console.log('Successfully registered with ValueTracker:', result.message);
+        logger.info('Successfully registered with ValueTracker:', result.message);
         window.toastr.success('Successfully registered with ValueTracker.');
 
     } catch (error) {
-        console.error('Error registering with ValueTracker:', error);
-        window.toastr.error('Error registering with ValueTracker. See console for details.');
+        logger.error('Error registering with ValueTracker:', error);
+        window.toastr.error('Error registering with ValueTracker. See logger for details.');
     }
 };
 
@@ -138,27 +125,27 @@ const initializeExtension = async () => {
         eventSource.on(event_types.APP_READY, () => {
             // Always register with ValueTracker when the app is ready
             registerWithValueTracker();
-            console.log('Outfit Extension: Initialized');
+            logger.info(`${EXTENSION_NAME}: Initialized`);
         });
 
         // Listen for chat changes
         eventSource.on(event_types.CHAT_CHANGED, () => {
-            console.log('Outfit Extension: Chat changed');
+            logger.info(`${EXTENSION_NAME}: Chat changed`);
         });
 
         // Listen for incoming messages
         eventSource.on(event_types.MESSAGE_RECEIVED, (data) => {
-            console.log('Outfit Extension: Message received', data);
+            logger.info(`${EXTENSION_NAME}: Message received`, data);
         });
 
         // Listen for messages being sent
         eventSource.on(event_types.MESSAGE_SENT, (data) => {
-            console.log('Outfit Extension: Message sent', data);
+            logger.info(`${EXTENSION_NAME}: Message sent`, data);
         });
 
-        console.log('Outfit Extension: Event listeners registered');
+        logger.info(`${EXTENSION_NAME}: Event listeners registered`);
     } else {
-        console.error('SillyTavern context not available');
+        logger.error('SillyTavern context not available');
     }
 };
 
@@ -190,7 +177,7 @@ const registerSlashCommands = () => {
             }),
         );
 
-        console.log(`${EXTENSION_NAME}: Slash commands registered`);
+        logger.info(`${EXTENSION_NAME}: Slash commands registered`);
     }
 };
 
@@ -198,7 +185,7 @@ const registerSlashCommands = () => {
 function registerSettingsPanel() {
     // Create settings HTML content using the standard format
     const settingsHtml = `
-        <div class="outfit-extension-settings">
+        <div class="${EXTENSION_ID}-settings">
             <div class="inline-drawer">
                 <div class="inline-drawer-toggle inline-drawer-header">
                     <b>${EXTENSION_NAME} Settings</b>
@@ -206,8 +193,8 @@ function registerSettingsPanel() {
                 </div>
                 <div class="inline-drawer-content">
                     <div class="flex-container">
-                        <label for="outfit-extension-debug">Debug Mode</label>
-                        <input type="checkbox" id="outfit-extension-debug"
+                        <label for="${EXTENSION_ID}-debug">Debug Mode</label>
+                        <input type="checkbox" id="${EXTENSION_ID}-debug"
                                 ${getSettings().debugMode ? 'checked' : ''}>
                     </div>
                 </div>
@@ -232,9 +219,9 @@ function registerSettingsPanel() {
                         SillyTavern.getContext().saveSettingsDebounced();
                     });
 
-                    console.log(`${EXTENSION_NAME}: Settings panel registered`);
+                    logger.info(`${EXTENSION_NAME}: Settings panel registered`);
                 } else {
-                    console.error(`${EXTENSION_NAME}: jQuery not available, cannot register settings panel`);
+                    logger.error(`${EXTENSION_NAME}: jQuery not available, cannot register settings panel`);
                 }
             });
         }
@@ -251,6 +238,6 @@ const waitForToastr = setInterval(() => {
         registerSlashCommands();
         registerSettingsPanel();
 
-        console.log(`${EXTENSION_NAME}: Initialization complete`);
+        logger.info(`${EXTENSION_NAME}: Initialization complete`);
     }
 }, 100);
