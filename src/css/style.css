@@ -25,3 +25,49 @@
 }
 
 /* Add any other outfit extension specific styles here */
+
+.st-outfits-option {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.st-outfits-option-label-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.st-outfits-option label {
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.st-outfits-option input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.st-outfits-option input[type="checkbox"] {
+    margin-left: 1rem;
+}
+
+.st-outfits-option-description {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.st-outfits-option button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.st-outfits-option button:hover {
+    background-color: #e0e0e0;
+}

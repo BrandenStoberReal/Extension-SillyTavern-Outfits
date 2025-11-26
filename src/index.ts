@@ -1,20 +1,12 @@
 import './css/style.css';
 import {logger} from "./utils/logger";
 import toastr from './utils/toastr';
-import {
-    API_ROOT_URL,
-    ApiEndpoints,
-    EXTENSION_ID,
-    EXTENSION_NAME,
-    HttpContentType,
-    HttpMethod,
-    MODULE_NAME
-} from "./constants";
+import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod,} from "./constants";
+import {SettingsManager} from "./settings";
+import {schema} from "./schema";
 
-// Default settings for the extension
-const defaultSettings = Object.freeze({
-    debugMode: false,
-});
+const settingsManager = new SettingsManager(schema);
+
 
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
@@ -72,32 +64,6 @@ const registerWithValueTracker = async () => {
         toastr.error('Error registering with ValueTracker. See logger for details.');
     }
 };
-
-// Function to get or initialize settings
-function getSettings() {
-    const context = SillyTavern.getContext();
-    // Use type assertion to handle extension settings
-    const extensionSettings: Record<string, any> = context.extensionSettings;
-
-    // Initialize settings if they don't exist
-    if (!extensionSettings[MODULE_NAME]) {
-        extensionSettings[MODULE_NAME] = structuredClone(defaultSettings);
-    }
-
-    // Ensure all default keys exist (helpful after updates)
-    for (const key of Object.keys(defaultSettings)) {
-        if (!(key in extensionSettings[MODULE_NAME])) {
-            extensionSettings[MODULE_NAME][key] = defaultSettings[key as keyof typeof defaultSettings];
-        }
-    }
-
-    // Remove the deprecated 'enabled' setting if it exists
-    if ('enabled' in extensionSettings[MODULE_NAME]) {
-        delete extensionSettings[MODULE_NAME].enabled;
-    }
-
-    return extensionSettings[MODULE_NAME];
-}
 
 // Initialize the extension when the app is ready
 const initializeExtension = async () => {
@@ -176,12 +142,7 @@ function registerSettingsPanel() {
                     <b>${EXTENSION_NAME} Settings</b>
                     <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
                 </div>
-                <div class="inline-drawer-content">
-                    <div class="flex-container">
-                        <label for="${EXTENSION_ID}-debug">Debug Mode</label>
-                        <input type="checkbox" id="${EXTENSION_ID}-debug"
-                                ${getSettings().debugMode ? 'checked' : ''}>
-                    </div>
+                <div id="${EXTENSION_ID}-settings-content" class="inline-drawer-content">
                 </div>
             </div>
         </div>
@@ -196,13 +157,11 @@ function registerSettingsPanel() {
                 // Add settings panel to the extensions settings container using jQuery
                 if (typeof $ !== 'undefined') {
                     $('#extensions_settings').append(settingsHtml);
+                    const settingsContent = document.getElementById(`${EXTENSION_ID}-settings-content`);
+                    if (settingsContent) {
+                        settingsManager.render(settingsContent);
+                    }
 
-                    // Set up event handler for the debug checkbox using jQuery
-                    $('#outfit-extension-debug').on('input', function (this: HTMLElement) {
-                        const settings = getSettings();
-                        settings.debugMode = $(this).prop('checked');
-                        SillyTavern.getContext().saveSettingsDebounced();
-                    });
 
                     logger.info(`${EXTENSION_NAME}: Settings panel registered`);
                 } else {
