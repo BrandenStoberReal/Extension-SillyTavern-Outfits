@@ -1,30 +1,19 @@
 import './css/style.css';
 import {logger} from "./utils/logger";
-import {API_ROOT_URL, EXTENSION_ID, EXTENSION_NAME, MODULE_NAME} from "./constants";
+import {
+    API_ROOT_URL,
+    ApiEndpoints,
+    EXTENSION_ID,
+    EXTENSION_NAME,
+    HttpContentType,
+    HttpMethod,
+    MODULE_NAME
+} from "./constants";
 
 // Default settings for the extension
 const defaultSettings = Object.freeze({
     debugMode: false,
 });
-
-// Define API enums
-enum ApiEndpoints {
-    Register = '/register',
-}
-
-enum HttpMethod {
-    GET = 'GET',
-    HEAD = 'HEAD',
-    POST = 'POST',
-    PUT = 'PUT',
-    PATCH = 'PATCH',
-    DELETE = 'DELETE',
-    OPTIONS = 'OPTIONS',
-}
-
-enum HttpContentType {
-    JSON = 'application/json',
-}
 
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
