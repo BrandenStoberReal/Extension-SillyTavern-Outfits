@@ -5,7 +5,7 @@ import toastr from './utils/toastr';
 import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod} from './constants';
 import {SettingsManager} from './settings';
 import {schema} from './schema';
-import {AddHeaderButton} from './utils/html';
+import {AddHeaderButton, HeaderButtonPosition} from './utils/html';
 
 const settingsManager = new SettingsManager(schema);
 
@@ -84,6 +84,7 @@ const initializeExtension = async () => {
                 id: 'st-outfits-header-button',
                 iconName: 'shirt',
                 title: 'Outfits',
+                position: HeaderButtonPosition.LAST,
             });
 
             // Add a placeholder to the drawer content

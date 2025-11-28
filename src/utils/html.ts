@@ -45,10 +45,16 @@ export interface GroupOptions extends BaseOptions {
     title: string;
 }
 
+export enum HeaderButtonPosition {
+    FIRST = 'first',
+    LAST = 'last',
+}
+
 export interface HeaderButtonOptions {
     id: string;
     iconName: string;
     title: string;
+    position?: HeaderButtonPosition;
 }
 
 export function createWrapper(options: BaseOptions): HTMLElement {
@@ -356,8 +362,22 @@ export function AddHeaderButton(options: HeaderButtonOptions): { content: HTMLEl
     buttonContainer.appendChild(drawerToggle);
     buttonContainer.appendChild(drawerContent);
 
-    // Prepend to be consistent with other drawers that are on the left side
-    holder.prepend(buttonContainer);
+    // Add click event listener to toggle the drawer
+    drawerToggle.addEventListener('click', () => {
+        iconEl.classList.toggle('closedIcon');
+        iconEl.classList.toggle('openIcon');
+        drawerContent.classList.toggle('closedDrawer');
+        drawerContent.classList.toggle('openDrawer');
+    });
+
+
+    // Use position to determine where to add the button
+    if (options.position === HeaderButtonPosition.LAST) {
+        holder.appendChild(buttonContainer);
+    } else {
+        // Prepend by default to be consistent with other drawers that are on the left side
+        holder.prepend(buttonContainer);
+    }
 
     const remove = () => {
         buttonContainer.remove();
