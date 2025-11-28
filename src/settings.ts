@@ -1,4 +1,4 @@
-import {AddCheckbox, AddTextbox} from './utils/html';
+import {AddCheckbox, AddGroup, AddTextbox} from './utils/html';
 import {MODULE_NAME} from './constants';
 
 export type SettingType = 'checkbox' | 'textbox' | 'range';
@@ -33,13 +33,18 @@ export class SettingsManager<T extends SettingsSchema> {
     }
 
     render(container: HTMLElement) {
+        const settingsGroup = AddGroup(container, {
+            title: 'Settings',
+            id: `${MODULE_NAME}-settings-group`,
+        });
+
         for (const key in this.defaultSettings) {
             const definition = this.defaultSettings[key as keyof T];
             const currentValue = this.get(key as keyof T);
 
             switch (definition.type) {
                 case 'checkbox':
-                    AddCheckbox(container, {
+                    AddCheckbox(settingsGroup, {
                         id: `${MODULE_NAME}-${String(key)}`,
                         label: definition.label,
                         labelClass: 'normal',
@@ -48,7 +53,7 @@ export class SettingsManager<T extends SettingsSchema> {
                     }, (value) => this.set(key as keyof T, value));
                     break;
                 case 'textbox':
-                    AddTextbox(container, {
+                    AddTextbox(settingsGroup, {
                         id: `${MODULE_NAME}-${String(key)}`,
                         label: definition.label,
                         labelClass: 'normal',
