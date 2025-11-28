@@ -45,10 +45,7 @@ export interface GroupOptions extends BaseOptions {
     title: string;
 }
 
-export enum HeaderButtonPosition {
-    FIRST = 'first',
-    LAST = 'last',
-}
+export type HeaderButtonPosition = 'first' | 'last' | number;
 
 export interface HeaderButtonOptions {
     id: string;
@@ -372,7 +369,20 @@ export function AddHeaderButton(options: HeaderButtonOptions): { content: HTMLEl
 
 
     // Use position to determine where to add the button
-    if (options.position === HeaderButtonPosition.LAST) {
+    if (typeof options.position === 'number') {
+        // If position is a number, insert at that index
+        const children = Array.from(holder.children);
+        if (options.position < 0) {
+            // Negative index: insert from the end
+            holder.insertBefore(buttonContainer, children[children.length + options.position]);
+        } else if (options.position >= children.length) {
+            // Index is beyond the length: append at the end
+            holder.appendChild(buttonContainer);
+        } else {
+            // Insert at the specified index
+            holder.insertBefore(buttonContainer, children[options.position]);
+        }
+    } else if (options.position === 'last') {
         holder.appendChild(buttonContainer);
     } else {
         // Prepend by default to be consistent with other drawers that are on the left side
