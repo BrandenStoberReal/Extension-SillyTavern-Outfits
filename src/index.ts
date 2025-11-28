@@ -1,3 +1,4 @@
+import '@fortawesome/fontawesome-free/css/all.css';
 import './css/style.css';
 import {logger} from './utils/logger';
 import toastr from './utils/toastr';
@@ -84,6 +85,11 @@ const initializeExtension = async () => {
             logger.info(`${EXTENSION_NAME}: Chat changed`);
         });
 
+        // Listen for chat creations
+        eventSource.on(event_types.CHAT_CREATED, () => {
+            logger.info(`${EXTENSION_NAME}: Chat created`);
+        });
+
         // Listen for incoming messages
         eventSource.on(event_types.MESSAGE_RECEIVED, (data) => {
             logger.info(`${EXTENSION_NAME}: Message received`, data);
@@ -157,7 +163,7 @@ function registerSettingsPanel() {
                 // Add settings panel to the extensions settings container using jQuery
                 if (typeof $ !== 'undefined') {
                     $('#extensions_settings').append(settingsHtml);
-                    const settingsContent = document.getElementById(`st-outfits-settings-content`);
+                    const settingsContent = document.getElementById('st-outfits-settings-content');
                     if (settingsContent) {
                         settingsManager.render(settingsContent);
                     }

@@ -31,9 +31,23 @@ export interface ButtonOptions extends BaseOptions {
     text: string;
 }
 
+export interface IconOptions extends BaseOptions {
+    iconName: string;
+    iconClass?: string;
+}
+
+export interface IconButtonOptions extends ButtonOptions {
+    iconName: string;
+    iconPosition?: 'left' | 'right';
+}
+
+export interface GroupOptions extends BaseOptions {
+    title: string;
+}
+
 export function createWrapper(options: BaseOptions): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.classList.add(`st-outfits-option`);
+    wrapper.classList.add('st-outfits-option');
     if (options.class) {
         wrapper.classList.add(...options.class.split(' '));
     }
@@ -55,7 +69,7 @@ export function createLabel(forId: string, text: string, labelClass?: string): H
 
 export function createDescription(text: string): HTMLElement {
     const description = document.createElement('p');
-    description.classList.add(`st-outfits-option-description`);
+    description.classList.add('st-outfits-option-description');
     description.textContent = text;
     return description;
 }
@@ -85,7 +99,7 @@ export function AddCheckbox(
     });
 
     const labelAndInput = document.createElement('div');
-    labelAndInput.classList.add(`st-outfits-option-label-input`);
+    labelAndInput.classList.add('st-outfits-option-label-input');
 
     if (options.label) {
         const label = createLabel(id, options.label, options.labelClass);
@@ -182,4 +196,124 @@ export function AddButton(
 
     parent.appendChild(wrapper);
     return button;
+}
+
+export function createIcon(iconName: string, iconClass?: string): HTMLElement {
+    const icon = document.createElement('i');
+    icon.classList.add('fa-solid', `fa-${iconName}`);
+    if (iconClass) {
+        icon.classList.add(...iconClass.split(' '));
+    }
+    return icon;
+}
+
+export function AddIconButton(
+    parent: HTMLElement,
+    options: IconButtonOptions,
+    callback: (event: MouseEvent) => void,
+): HTMLButtonElement {
+    const wrapper = createWrapper(options);
+
+    const button = document.createElement('button');
+    button.id = options.id ?? `st-outfits-icon-button-${Math.random().toString(36).substring(2)}`;
+
+    if (options.attributes) {
+        Object.entries(options.attributes).forEach(([key, value]) => {
+            button.setAttribute(key, value);
+        });
+    }
+
+    button.addEventListener('click', (event) => {
+        callback(event);
+    });
+
+    const icon = createIcon(options.iconName);
+    const text = document.createElement('span');
+    text.textContent = options.text;
+
+    const iconPosition = options.iconPosition ?? 'left';
+
+    if (iconPosition === 'left') {
+        button.appendChild(icon);
+        button.appendChild(text);
+    } else {
+        button.appendChild(text);
+        button.appendChild(icon);
+    }
+
+    if (options.label) {
+        const label = createLabel(button.id, options.label, options.labelClass);
+        wrapper.appendChild(label);
+    }
+
+    wrapper.appendChild(button);
+
+    if (options.description && (options.includeDescription ?? true)) {
+        const description = createDescription(options.description);
+        wrapper.appendChild(description);
+    }
+
+    parent.appendChild(wrapper);
+    return button;
+}
+
+export function AddGroup(parent: HTMLElement, options: GroupOptions): HTMLElement {
+    const fieldset = document.createElement('fieldset');
+    fieldset.classList.add('st-outfits-group');
+    if (options.class) {
+        fieldset.classList.add(...options.class.split(' '));
+    }
+
+    if (options.title) {
+        const legend = document.createElement('legend');
+        legend.textContent = options.title;
+        fieldset.appendChild(legend);
+    }
+
+    if (options.description) {
+        const description = createDescription(options.description);
+        fieldset.appendChild(description);
+    }
+
+    parent.appendChild(fieldset);
+    return fieldset;
+}
+
+export function AddGalleryContainer(parent: HTMLElement, options: BaseOptions): HTMLElement {
+    const gallery = document.createElement('div');
+    gallery.classList.add('st-outfits-gallery');
+    if (options.class) {
+        gallery.classList.add(...options.class.split(' '));
+    }
+    if (options.id) {
+        gallery.id = options.id;
+    }
+    parent.appendChild(gallery);
+    return gallery;
+}
+
+export function AddVerticalContainer(parent: HTMLElement, options: BaseOptions): HTMLElement {
+    const group = document.createElement('div');
+    group.classList.add('st-outfits-vertical-group');
+    if (options.class) {
+        group.classList.add(...options.class.split(' '));
+    }
+    if (options.id) {
+        group.id = options.id;
+    }
+    parent.appendChild(group);
+    return group;
+}
+
+export function AddHorizontalContainer(parent: HTMLElement, options: BaseOptions): HTMLElement {
+    const group = document.createElement('div');
+    group.classList.add('st-outfits-horizontal-group');
+    if (options.class) {
+        group.classList.add(...options.class.split(' '));
+    }
+    if (options.id) {
+        group.id = options.id;
+    }
+    parent.appendChild(group);
+    return group;
 }
