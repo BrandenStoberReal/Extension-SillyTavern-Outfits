@@ -25,12 +25,13 @@
 }
 
 .drawer .drawer-content {
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
     max-height: 0;
     overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
 }
 
 .drawer .openDrawer {

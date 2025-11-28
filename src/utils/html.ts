@@ -369,10 +369,22 @@ export function AddHeaderButton(options: HeaderButtonOptions): { content: HTMLEl
 
         if (drawerContent.classList.contains('openDrawer')) {
             // Closing the drawer
+            drawerContent.style.maxHeight = drawerContent.scrollHeight + 'px';
+            // Trigger reflow
+            drawerContent.offsetHeight;
+            drawerContent.style.maxHeight = '0px';
             drawerContent.classList.remove('openDrawer');
         } else {
             // Opening the drawer
+            drawerContent.style.maxHeight = drawerContent.scrollHeight + 'px';
             drawerContent.classList.add('openDrawer');
+
+            // Reset the height after animation completes
+            setTimeout(() => {
+                if (drawerContent.classList.contains('openDrawer')) {
+                    drawerContent.style.maxHeight = 'none';
+                }
+            }, 300); // Match the CSS transition duration
         }
     });
 
