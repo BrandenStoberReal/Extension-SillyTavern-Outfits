@@ -19,6 +19,49 @@
     margin-right: 8px;
 }
 /* Add any other outfit extension specific styles here */
+/* Animated drawer styles similar to settings UI */
+.drawer {
+    position: relative;
+}
+
+.drawer .drawer-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+}
+
+.drawer .openDrawer {
+    opacity: 1;
+    transform: translateY(0);
+    overflow: visible;
+}
+
+/* Make sure the drawer starts in closed state */
+.drawer .drawer-content:not(.openDrawer) {
+    display: block;
+}
+
+.drawer .drawer-toggle {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.drawer .drawer-icon {
+    transition: transform 0.3s ease-in-out;
+}
+
+.drawer .drawer-icon.openIcon {
+    transform: rotate(180deg);
+}
+
 .st-outfits-option {
     display: flex;
     flex-direction: column;
