@@ -5,6 +5,7 @@ import toastr from './utils/toastr';
 import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod} from './constants';
 import {SettingsManager} from './settings';
 import {schema} from './schema';
+import {AddHeaderButton} from './utils/html';
 
 const settingsManager = new SettingsManager(schema);
 
@@ -77,6 +78,17 @@ const initializeExtension = async () => {
         eventSource.on(event_types.APP_READY, () => {
             // Always register with ValueTracker when the app is ready
             registerWithValueTracker();
+
+            // Add the new header button
+            const {content} = AddHeaderButton({
+                id: 'st-outfits-header-button',
+                iconName: 'shirt',
+                title: 'Outfits',
+            });
+
+            // Add a placeholder to the drawer content
+            content.innerHTML = '<h3>Outfits</h3><p>Manage your outfits here.</p>';
+
             logger.info(`${EXTENSION_NAME}: Initialized`);
         });
 
@@ -97,7 +109,7 @@ const initializeExtension = async () => {
 
         // Listen for messages being sent
         eventSource.on(event_types.MESSAGE_SENT, (data) => {
-            logger.info(`${EXTENSION_NAME}: Message sent`, data);
+            logger.info(`${EXTENSION_NAME}: Message sent`);
         });
 
         logger.info(`${EXTENSION_NAME}: Event listeners registered`);

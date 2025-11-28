@@ -45,6 +45,12 @@ export interface GroupOptions extends BaseOptions {
     title: string;
 }
 
+export interface HeaderButtonOptions {
+    id: string;
+    iconName: string;
+    title: string;
+}
+
 export function createWrapper(options: BaseOptions): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('st-outfits-option');
@@ -316,4 +322,46 @@ export function AddHorizontalContainer(parent: HTMLElement, options: BaseOptions
     }
     parent.appendChild(group);
     return group;
+}
+
+/**
+ * Adds a button to the top header.
+ * @param {HeaderButtonOptions} options - The options for the button.
+ * @returns {{content: HTMLElement, remove: () => void}} An object containing the drawer content element and a function to remove the button.
+ */
+export function AddHeaderButton(options: HeaderButtonOptions): { content: HTMLElement; remove: () => void; } {
+    const holder = document.getElementById('top-settings-holder');
+    if (!holder) {
+        // SillyTavern will throw its own error if the element is not found, so we can just re-throw
+        throw new Error('Could not find top-settings-holder');
+    }
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.id = options.id;
+    buttonContainer.classList.add('drawer');
+
+    const drawerToggle = document.createElement('div');
+    drawerToggle.classList.add('drawer-toggle', 'drawer-header');
+
+    const iconEl = createIcon(options.iconName, 'drawer-icon fa-fw closedIcon interactable');
+    iconEl.id = `${options.id}-icon`;
+    iconEl.title = options.title;
+    iconEl.setAttribute('role', 'button');
+
+    const drawerContent = document.createElement('div');
+    drawerContent.id = `${options.id}-content`;
+    drawerContent.classList.add('drawer-content', 'closedDrawer', 'fillRight');
+
+    drawerToggle.appendChild(iconEl);
+    buttonContainer.appendChild(drawerToggle);
+    buttonContainer.appendChild(drawerContent);
+
+    // Prepend to be consistent with other drawers that are on the left side
+    holder.prepend(buttonContainer);
+
+    const remove = () => {
+        buttonContainer.remove();
+    };
+
+    return {content: drawerContent, remove};
 }
