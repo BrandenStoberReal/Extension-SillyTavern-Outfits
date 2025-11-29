@@ -35,7 +35,7 @@ export class SettingsManager<T extends SettingsSchema> {
     render(container: HTMLElement) {
         const settingsGroup = AddGroup(container, {
             title: 'Settings',
-            id: `${MODULE_NAME}-settings-group`,
+            id: `sillytavern-lib-settings-group`,
         });
 
         for (const key in this.defaultSettings) {
@@ -45,7 +45,7 @@ export class SettingsManager<T extends SettingsSchema> {
             switch (definition.type) {
                 case 'checkbox':
                     AddCheckbox(settingsGroup, {
-                        id: `${MODULE_NAME}-${String(key)}`,
+                        id: `sillytavern-lib-${String(key)}`,
                         label: definition.label,
                         labelClass: 'normal',
                         description: definition.description,
@@ -54,7 +54,7 @@ export class SettingsManager<T extends SettingsSchema> {
                     break;
                 case 'textbox':
                     AddTextbox(settingsGroup, {
-                        id: `${MODULE_NAME}-${String(key)}`,
+                        id: `sillytavern-lib-${String(key)}`,
                         label: definition.label,
                         labelClass: 'normal',
                         description: definition.description,
