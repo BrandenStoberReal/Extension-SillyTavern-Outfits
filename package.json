@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
-    "sillytavern-utils": "^1.0.5",
+    "sillytavern-utils": "^1.0.7",
     "typescript": "^5.8.3"
   }
 }
