@@ -1,12 +1,18 @@
 import '@fortawesome/fontawesome-free/css/all.css';
 import './css/style.css';
-import {AddHeaderButton, logger} from 'sillytavern-utils';
+import 'sillytavern-utils/styles'
+import {AddHeaderButton, Logger, LogLevel} from 'sillytavern-utils';
 import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod} from './constants';
 import {SettingsManager} from './settings';
 import {schema} from './schema';
 
 const settingsManager = new SettingsManager(schema);
 
+const mainlogger = new Logger({
+    level: LogLevel.DEBUG,
+    prefix: EXTENSION_NAME,
+    timestamp: true
+});
 
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
@@ -36,31 +42,31 @@ const registerWithValueTracker = async () => {
         } else {
             // If not JSON, get text content for debugging
             const textResult = await response.text();
-            logger.warn('Non-JSON response received:', textResult);
-            window.toastr.warning('Non-JSON response received from ValueTracker. See logger for details.');
+            mainlogger.warn('Non-JSON response received:', textResult);
+            window.toastr.warning('Non-JSON response received from ValueTracker. See mainlogger for details.');
             result = {message: textResult, status: response.status};
         }
 
         if (response.status === 404) {
-            logger.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?', result);
+            mainlogger.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?', result);
             window.toastr.error('Value Tracker not found or not running. Did you enable server plugins in your config.yaml file?');
             return;
         } else if (response.status === 403) {
-            logger.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:', result);
+            mainlogger.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled:', result);
             window.toastr.error('Access forbidden. Please check that ValueTracker plugin is properly configured and enabled.');
             return;
         } else if (!response.ok) {
-            logger.error('Failed to register with ValueTracker:', result);
-            window.toastr.error('Failed to register with ValueTracker. See logger for details.');
+            mainlogger.error('Failed to register with ValueTracker:', result);
+            window.toastr.error('Failed to register with ValueTracker. See mainlogger for details.');
             return;
         }
 
-        logger.info('Successfully registered with ValueTracker:', result.message);
+        mainlogger.info('Successfully registered with ValueTracker:', result.message);
         window.toastr.success('Successfully registered with ValueTracker.');
 
     } catch (error) {
-        logger.error('Error registering with ValueTracker:', error);
-        window.toastr.error('Error registering with ValueTracker. See logger for details.');
+        mainlogger.error('Error registering with ValueTracker:', error);
+        window.toastr.error('Error registering with ValueTracker. See mainlogger for details.');
     }
 };
 
@@ -87,32 +93,32 @@ const initializeExtension = async () => {
             // Add a placeholder to the drawer content
             content.innerHTML = '<h3>Outfits</h3><p>Manage your outfits here.</p>';
 
-            logger.info(`${EXTENSION_NAME}: Initialized`);
+            mainlogger.info(`${EXTENSION_NAME}: Initialized`);
         });
 
         // Listen for chat changes
         eventSource.on(event_types.CHAT_CHANGED, () => {
-            logger.info(`${EXTENSION_NAME}: Chat changed`);
+            mainlogger.info(`${EXTENSION_NAME}: Chat changed`);
         });
 
         // Listen for chat creations
         eventSource.on(event_types.CHAT_CREATED, () => {
-            logger.info(`${EXTENSION_NAME}: Chat created`);
+            mainlogger.info(`${EXTENSION_NAME}: Chat created`);
         });
 
         // Listen for incoming messages
         eventSource.on(event_types.MESSAGE_RECEIVED, (data: object) => {
-            logger.info(`${EXTENSION_NAME}: Message received`, data);
+            mainlogger.info(`${EXTENSION_NAME}: Message received`, data);
         });
 
         // Listen for messages being sent
         eventSource.on(event_types.MESSAGE_SENT, (data: object) => {
-            logger.info(`${EXTENSION_NAME}: Message sent`);
+            mainlogger.info(`${EXTENSION_NAME}: Message sent`);
         });
 
-        logger.info(`${EXTENSION_NAME}: Event listeners registered`);
+        mainlogger.info(`${EXTENSION_NAME}: Event listeners registered`);
     } else {
-        logger.error('SillyTavern context not available');
+        mainlogger.error('SillyTavern context not available');
     }
 };
 
@@ -144,7 +150,7 @@ const registerSlashCommands = () => {
             }),
         );
 
-        logger.info(`${EXTENSION_NAME}: Slash commands registered`);
+        mainlogger.info(`${EXTENSION_NAME}: Slash commands registered`);
     }
 };
 
@@ -178,9 +184,9 @@ function registerSettingsPanel() {
                         settingsManager.render(settingsContent);
                     }
 
-                    logger.info(`${EXTENSION_NAME}: Settings panel registered`);
+                    mainlogger.info(`${EXTENSION_NAME}: Settings panel registered`);
                 } else {
-                    logger.error(`${EXTENSION_NAME}: jQuery not available, cannot register settings panel`);
+                    mainlogger.error(`${EXTENSION_NAME}: jQuery not available, cannot register settings panel`);
                 }
             });
         }
@@ -194,5 +200,5 @@ function registerSettingsPanel() {
     registerSlashCommands();
     registerSettingsPanel();
 
-    logger.info(`${EXTENSION_NAME}: Initialization complete`);
+    mainlogger.info(`${EXTENSION_NAME}: Initialization complete`);
 })();
