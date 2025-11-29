@@ -1,11 +1,9 @@
 import '@fortawesome/fontawesome-free/css/all.css';
 import './css/style.css';
-import {logger} from '../../SillyTavern-Utils/src/utils/logger';
-import toastr from '../../SillyTavern-Utils/src/utils/toastr';
+import {AddHeaderButton, logger, toastr} from 'sillytavern-utils';
 import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod} from './constants';
 import {SettingsManager} from './settings';
 import {schema} from './schema';
-import {AddHeaderButton} from '../../SillyTavern-Utils/src/utils/html';
 
 const settingsManager = new SettingsManager(schema);
 
@@ -13,7 +11,6 @@ const settingsManager = new SettingsManager(schema);
 // Register with ValueTracker plugin on startup
 const registerWithValueTracker = async () => {
     const context = SillyTavern.getContext();
-
     toastr.info('Registering with ValueTracker plugin...');
     try {
         // Get the SillyTavern context to access authentication headers
