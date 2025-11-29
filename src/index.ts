@@ -16,22 +16,11 @@ const mainlogger = new Logger({
     timestamp: true,
 });
 
-const ExtensionSchema = createSettingsSchema({
-    debugMode: {
-        type: 'checkbox',
-        label: 'Debug Mode',
-        description: 'Enable debug logging in the browser console.',
-        value: false,
-    }
-} as const);
-
-initializeValueTrackerAPI(EXTENSION_ID);
-
-const settingsManager = new SettingsManager(ExtensionSchema, EXTENSION_NAME);
-
 // Initialize the extension when the app is ready
 const initializeExtension = async () => {
     try {
+        initializeValueTrackerAPI(EXTENSION_ID);
+
         const registerResponse = await valueTrackerAPI.registerExtension(EXTENSION_ID);
         toastr.success("Successfully registered with ValueTracker");
     } catch (error) {
@@ -62,6 +51,18 @@ const registerSlashCommands = () => {
 (function () {
     initializeExtension();
     registerSlashCommands();
+
+    const ExtensionSchema = createSettingsSchema({
+        debugMode: {
+            type: 'checkbox',
+            label: 'Debug Mode',
+            description: 'Enable debug logging in the browser console.',
+            value: false,
+        }
+    } as const);
+
+    const settingsManager = new SettingsManager(ExtensionSchema, EXTENSION_NAME);
+
     registerSettingsPanel(settingsManager, EXTENSION_ID, EXTENSION_NAME, mainlogger);
 
     mainlogger.info(`${EXTENSION_NAME}: Initialization complete`);
