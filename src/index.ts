@@ -19,8 +19,6 @@ const mainlogger = new Logger({
 // Initialize the extension when the app is ready
 const initializeExtension = async () => {
     try {
-        initializeValueTrackerAPI(EXTENSION_ID);
-
         const registerResponse = await valueTrackerAPI.registerExtension(EXTENSION_ID);
         toastr.success("Successfully registered with ValueTracker");
     } catch (error) {
@@ -34,6 +32,8 @@ const initializeExtension = async () => {
     const ctxUtil = ContextUtil.getInstance();
     const ctx = ctxUtil.fetchSillyTavernContext().then((resolved) => {
         resolved.eventSource.on(resolved.event_types.APP_READY, () => {
+            initializeValueTrackerAPI(EXTENSION_ID);
+
             initializeExtension();
 
             const ExtensionSchema = createSettingsSchema({
