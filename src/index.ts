@@ -1,6 +1,4 @@
-import '@fortawesome/fontawesome-free/css/all.css';
 import './css/style.css';
-import 'sillytavern-utils/styles'
 import {AddHeaderButton, Logger, LogLevel} from 'sillytavern-utils';
 import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod} from './constants';
 import {SettingsManager} from './settings';

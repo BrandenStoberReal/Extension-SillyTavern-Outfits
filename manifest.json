@@ -4,7 +4,7 @@
   "requires": [],
   "optional": [],
   "js": "dist/index.js",
-  "css": "",
+  "css": "dist/style.css",
   "author": "Branden",
   "version": "1.0.0",
   "homePage": "https://github.com/BrandenStoberReal/Extension-SillyTavern-Outfits",

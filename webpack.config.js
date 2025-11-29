@@ -1,6 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import TerserPlugin from 'terser-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 const __dirname = import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url));
 
@@ -11,7 +12,7 @@ export default {
         filename: 'index.js',
     },
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js', '.css'],
     },
     module: {
         rules: [
@@ -22,7 +23,12 @@ export default {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader'],
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader'
+                ],
+                include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'node_modules')],
             },
             {
                 test: /\.html$/,
@@ -30,6 +36,11 @@ export default {
             },
         ],
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'style.css',
+        }),
+    ],
     optimization: {
         minimizer: [
             new TerserPlugin({
