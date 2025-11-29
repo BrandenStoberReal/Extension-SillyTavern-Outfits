@@ -82,7 +82,7 @@ const initializeExtension = async () => {
 
             // Add the new header button
             const {content} = AddHeaderButton({
-                id: 'st-outfits-header-button',
+                id: 'sillytavern-lib-header-button',
                 iconName: 'shirt',
                 title: 'Outfits',
                 position: 'last',
@@ -162,7 +162,7 @@ function registerSettingsPanel() {
                     <b>${EXTENSION_NAME} Settings</b>
                     <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
                 </div>
-                <div id="st-outfits-settings-content" class="inline-drawer-content">
+                <div id="sillytavern-lib-settings-content" class="inline-drawer-content">
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@ function registerSettingsPanel() {
                 // Add settings panel to the extensions settings container using jQuery
                 if (typeof $ !== 'undefined') {
                     $('#extensions_settings').append(settingsHtml);
-                    const settingsContent = document.getElementById('st-outfits-settings-content');
+                    const settingsContent = document.getElementById('sillytavern-lib-settings-content');
                     if (settingsContent) {
                         settingsManager.render(settingsContent);
                     }
