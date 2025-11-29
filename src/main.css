@@ -1,5 +1,0 @@
-/* Import the sillytavern-utils styles */
-@import '~sillytavern-utils/src/styles/index.css';
-
-/* Import the extension-specific styles */
-@import './css/style.css';

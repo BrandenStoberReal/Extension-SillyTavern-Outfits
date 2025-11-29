@@ -26,7 +26,7 @@ export default {
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
-                    'postcss-loader'
+                    'postcss-loader',
                 ],
                 include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'node_modules')],
             },
