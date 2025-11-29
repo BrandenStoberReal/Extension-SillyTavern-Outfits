@@ -36,7 +36,7 @@ const registerSlashCommands = () => {
             return `${EXTENSION_NAME} online and operational.`;
         },
         {
-            aliases: [],
+            aliases: [''],
             returns: 'Outfit extension status message',
             helpString: '<div>Get the status of the extension.</div>',
         }
