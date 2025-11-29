@@ -1,5 +1,5 @@
 import {
-    ContextUtil,
+    contextUtil,
     createSettingsSchema,
     initializeValueTrackerAPI,
     Logger,
@@ -29,8 +29,7 @@ const initializeExtension = async () => {
 // Actual execution START
 
 (function () {
-    const ctxUtil = ContextUtil.getInstance();
-    const ctx = ctxUtil.fetchSillyTavernContext().then((resolved) => {
+    contextUtil.fetchSillyTavernContext().then((resolved) => {
         resolved.eventSource.on(resolved.event_types.APP_READY, () => {
             initializeValueTrackerAPI(EXTENSION_ID);
 
