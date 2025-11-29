@@ -5,7 +5,6 @@ import {
     LogLevel,
     registerSettingsPanel,
     SettingsManager,
-    slashCommandsUtil,
     valueTrackerAPI
 } from 'sillytavern-utils';
 import {EXTENSION_ID, EXTENSION_NAME} from './constants';
@@ -28,29 +27,11 @@ const initializeExtension = async () => {
     }
 };
 
-// Register a simple slash command for testing
-const registerSlashCommands = () => {
-    const success = slashCommandsUtil.registerSlashCommand(
-        'outfit-status',
-        (namedArgs, unnamedArgs) => {
-            return `${EXTENSION_NAME} online and operational.`;
-        },
-        {
-            aliases: [''],
-            returns: 'Outfit extension status message',
-            helpString: '<div>Get the status of the extension.</div>',
-        }
-    );
-
-    mainlogger.info(`${EXTENSION_NAME}: Slash commands registered`);
-};
-
 
 // Actual execution START
 
 (function () {
     initializeExtension();
-    registerSlashCommands();
 
     const ExtensionSchema = createSettingsSchema({
         debugMode: {
