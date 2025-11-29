@@ -1,11 +1,11 @@
 import '@fortawesome/fontawesome-free/css/all.css';
 import './css/style.css';
-import {logger} from './utils/logger';
-import toastr from './utils/toastr';
+import {logger} from '../../SillyTavern-Utils/src/utils/logger';
+import toastr from '../../SillyTavern-Utils/src/utils/toastr';
 import {API_ROOT_URL, ApiEndpoints, EXTENSION_ID, EXTENSION_NAME, HttpContentType, HttpMethod} from './constants';
 import {SettingsManager} from './settings';
 import {schema} from './schema';
-import {AddHeaderButton} from './utils/html';
+import {AddHeaderButton} from '../../SillyTavern-Utils/src/utils/html';
 
 const settingsManager = new SettingsManager(schema);
 
@@ -104,12 +104,12 @@ const initializeExtension = async () => {
         });
 
         // Listen for incoming messages
-        eventSource.on(event_types.MESSAGE_RECEIVED, (data) => {
+        eventSource.on(event_types.MESSAGE_RECEIVED, (data: object) => {
             logger.info(`${EXTENSION_NAME}: Message received`, data);
         });
 
         // Listen for messages being sent
-        eventSource.on(event_types.MESSAGE_SENT, (data) => {
+        eventSource.on(event_types.MESSAGE_SENT, (data: object) => {
             logger.info(`${EXTENSION_NAME}: Message sent`);
         });
 

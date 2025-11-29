@@ -1,4 +1,4 @@
-import {AddCheckbox, AddGroup, AddTextbox} from './utils/html';
+import {AddCheckbox, AddGroup, AddTextbox} from '../../SillyTavern-Utils/src/utils/html';
 import {MODULE_NAME} from './constants';
 
 export type SettingType = 'checkbox' | 'textbox' | 'range';

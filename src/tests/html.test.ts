@@ -2,7 +2,14 @@
  * @jest-environment jsdom
  */
 
-import {AddButton, AddCheckbox, AddTextbox, createDescription, createLabel, createWrapper} from '../utils/html';
+import {
+    AddButton,
+    AddCheckbox,
+    AddTextbox,
+    createDescription,
+    createLabel,
+    createWrapper
+} from '../../../SillyTavern-Utils/src/utils/html';
 
 describe('HTML Utils', () => {
     let parent: HTMLElement;

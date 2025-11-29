@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import {logDebug, logError, Logger, logInfo, LogLevel, logWarn} from '../utils/logger';
+import {logDebug, logError, Logger, logInfo, LogLevel, logWarn} from '../../../SillyTavern-Utils/src/utils/logger';
 
 describe('Logger', () => {
     let consoleLogSpy: jest.SpyInstance;
