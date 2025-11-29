@@ -1,5 +1,4 @@
 import {
-    contextUtil,
     createSettingsSchema,
     initializeValueTrackerAPI,
     Logger,
@@ -29,26 +28,22 @@ const initializeExtension = async () => {
 // Actual execution START
 
 (function () {
-    contextUtil.fetchSillyTavernContext().then((resolved) => {
-        resolved.eventSource.on(resolved.event_types.APP_READY, () => {
-            initializeValueTrackerAPI(EXTENSION_ID);
+    initializeValueTrackerAPI(EXTENSION_ID);
 
-            initializeExtension();
+    initializeExtension();
 
-            const ExtensionSchema = createSettingsSchema({
-                debugMode: {
-                    type: 'checkbox',
-                    label: 'Debug Mode',
-                    description: 'Enable debug logging in the browser console.',
-                    value: false,
-                }
-            } as const);
+    const ExtensionSchema = createSettingsSchema({
+        debugMode: {
+            type: 'checkbox',
+            label: 'Debug Mode',
+            description: 'Enable debug logging in the browser console.',
+            value: false,
+        }
+    } as const);
 
-            const settingsManager = new SettingsManager(ExtensionSchema, EXTENSION_NAME);
+    const settingsManager = new SettingsManager(ExtensionSchema, EXTENSION_NAME);
 
-            registerSettingsPanel(settingsManager, EXTENSION_ID, EXTENSION_NAME, mainlogger);
+    registerSettingsPanel(settingsManager, EXTENSION_ID, EXTENSION_NAME, mainlogger);
 
-            mainlogger.info(`${EXTENSION_NAME}: Initialization complete`);
-        })
-    });
+    mainlogger.info(`${EXTENSION_NAME}: Initialization complete`);
 })();
