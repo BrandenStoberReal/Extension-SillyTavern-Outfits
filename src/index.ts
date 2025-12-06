@@ -30,6 +30,7 @@ const initializeExtension = async () => {
         id: 'outfit-manager-button',
         iconName: 'user-pen',
         title: 'Outfit Manager',
+        position: 'last'
     });
 
     headerButton.content.innerHTML = outfitManagerTemplate;
