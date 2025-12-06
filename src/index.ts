@@ -28,7 +28,7 @@ const initializeExtension = async () => {
 
     const headerButton = AddHeaderButton({
         id: 'outfit-manager-button',
-        iconName: 'user-pen',
+        iconName: 'shirt',
         title: 'Outfit Manager',
         position: 'last'
     });
