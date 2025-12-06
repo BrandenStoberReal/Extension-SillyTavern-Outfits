@@ -1,13 +1,15 @@
 import {
+    AddHeaderButton,
     createSettingsSchema,
     initializeValueTrackerAPI,
     Logger,
     LogLevel,
     registerSettingsPanel,
     SettingsManager,
-    valueTrackerAPI
+    valueTrackerAPI,
 } from 'sillytavern-utils';
 import {EXTENSION_ID, EXTENSION_NAME} from './constants';
+import outfitManagerTemplate from './html/templates/outfitManager.html';
 
 const mainlogger = new Logger({
     level: LogLevel.DEBUG,
@@ -23,6 +25,14 @@ const initializeExtension = async () => {
     } catch (error) {
         toastr.error(" Error registering with ValueTracker: " + error);
     }
+
+    const headerButton = AddHeaderButton({
+        id: 'outfit-manager-button',
+        iconName: 'fa-solid fa-user-pen',
+        title: 'Outfit Manager',
+    });
+
+    headerButton.content.innerHTML = outfitManagerTemplate;
 };
 
 // Actual execution START
